@@ -203,7 +203,7 @@
     </footer>
 
     <div id="order-modal" class="fixed inset-0 z-[60] flex items-end md:items-center justify-center hidden-modal modal bg-black/80 backdrop-blur-sm p-0 md:p-4">
-        <div class="bg-white w-full md:w-[95%] lg:w-[600px] h-[100vh] md:h-[90vh] rounded-none md:rounded-3xl overflow-hidden flex flex-col relative shadow-2xl">
+        <div class="bg-white w-full md:w-[95%] lg:w-[600px] h-[100dvh] md:h-[90vh] rounded-none md:rounded-3xl overflow-hidden flex flex-col relative shadow-2xl">
             
             <div class="bg-gray-50 p-4 border-b flex justify-between items-center shrink-0 z-10 shadow-sm relative">
                 <button onclick="showMenuStep()" id="btn-back-step" class="hidden absolute left-4 p-2 bg-white border border-gray-200 rounded-full hover:bg-gray-100 transition text-gray-700">
@@ -255,7 +255,7 @@
                             
                             <div class="mb-4">
                                 <label class="block text-xs font-bold text-gray-500 mb-1">TU NOMBRE</label>
-                                <input type="text" id="customer-name" placeholder="Ej. Aldo Torres" class="w-full border-2 border-gray-200 rounded-lg p-3 text-sm font-bold focus:border-orange-500 outline-none bg-white">
+                                <input type="text" id="customer-name" placeholder="Ej. Juan Pérez" class="w-full border-2 border-gray-200 rounded-lg p-3 text-sm font-bold focus:border-orange-500 outline-none bg-white">
                             </div>
 
                             <div class="mb-4">
@@ -368,13 +368,11 @@
         renderMenu();
         startCarousel();
 
-        // AQUÍ SE AÑADE EL EVENTO DE SCROLL PARA MOSTRAR EL BOTÓN FLOTANTE
         window.addEventListener('scroll', () => {
             const historySection = document.getElementById('historia-section');
             const floatingBtn = document.getElementById('floating-btn');
             
             if(historySection && floatingBtn) {
-                // Aparece un poco antes de llegar a la sección completa (offset - 300px)
                 if (window.scrollY > (historySection.offsetTop - 300)) {
                     floatingBtn.classList.remove('opacity-0', 'pointer-events-none');
                     floatingBtn.classList.add('opacity-100', 'pointer-events-auto');
@@ -411,7 +409,7 @@
             document.getElementById('step-1-menu').classList.add('hidden');
             document.getElementById('step-customize').classList.add('hidden');
             document.getElementById('step-2-checkout').classList.remove('hidden');
-            document.getElementById('btn-back-step').remove('hidden');
+            document.getElementById('btn-back-step').classList.remove('hidden');
             document.getElementById('modal-subtitle').innerText = "Finalizar Pedido";
             renderCheckoutSummary();
         }
@@ -821,7 +819,7 @@
             msg += `💳 *Método de Pago:* ${paymentMethod}\n\n`;
             msg += `📱 _Pedido generado automáticamente desde Menú Digital_`;
 
-            window.open(`https://wa.me/51${900694550}?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/51900694550?text=${encodeURIComponent(msg)}`, '_blank');
         }
     </script>
 </body>
