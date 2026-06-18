@@ -77,3 +77,6 @@ body {
     display: inline-block;
     margin-top: 4px;
 }
+button {
+    touch-action: manipulation;
+}
