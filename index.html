@@ -434,6 +434,7 @@
             let html = `<h4 class="font-black text-xl text-gray-900 mb-2 uppercase">${product.name}</h4>`;
             html += `<p class="text-sm text-gray-500 mb-6">${product.desc}</p>`;
 
+            // MODIFICADO: Ahora el número es un <input type="number"> con teclado optimizado
             if (product.type === "wings_8") {
                 html += `
                     <div class="mb-4">
@@ -444,7 +445,7 @@
                                     <span class="font-bold text-sm text-gray-800">${sabor}</span>
                                     <div class="flex items-center gap-2">
                                         <button type="button" onclick="adjustCustomQty('${sabor}', -1, 8)" class="w-7 h-7 bg-gray-100 rounded-full font-bold text-gray-600 shadow-sm">-</button>
-                                        <span id="qty-${sabor}" class="w-6 text-center font-black text-base custom-flavor-qty" data-flavor="${sabor}">0</span>
+                                        <input type="number" id="qty-${sabor}" class="w-10 text-center font-black text-base bg-transparent border-none outline-none custom-flavor-qty [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" data-flavor="${sabor}" value="0" inputmode="numeric" pattern="[0-9]*" min="0" max="8" oninput="handleManualInput('${sabor}', 8)">
                                         <button type="button" onclick="adjustCustomQty('${sabor}', 1, 8)" class="w-7 h-7 bg-orange-500 rounded-full font-bold text-white shadow-sm">+</button>
                                     </div>
                                 </div>
@@ -475,7 +476,7 @@
                                         <span class="font-bold text-sm text-gray-800">${sabor}</span>
                                         <div class="flex items-center gap-2">
                                             <button type="button" onclick="adjustCustomQty('${sabor}', -1, ${product.totalWings})" class="w-7 h-7 bg-gray-100 rounded-full font-bold text-gray-600 shadow-sm">-</button>
-                                            <span id="qty-${sabor}" class="w-6 text-center font-black text-base custom-flavor-qty" data-flavor="${sabor}">0</span>
+                                            <input type="number" id="qty-${sabor}" class="w-10 text-center font-black text-base bg-transparent border-none outline-none custom-flavor-qty [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" data-flavor="${sabor}" value="0" inputmode="numeric" pattern="[0-9]*" min="0" max="${product.totalWings}" oninput="handleManualInput('${sabor}', ${product.totalWings})">
                                             <button type="button" onclick="adjustCustomQty('${sabor}', 1, ${product.totalWings})" class="w-7 h-7 bg-orange-500 rounded-full font-bold text-white shadow-sm">+</button>
                                         </div>
                                     </div>
@@ -537,11 +538,42 @@
             container.innerHTML = html;
         }
 
+        // NUEVA FUNCIÓN: Procesa y valida lo que el cliente escribe manualmente en el teclado
+        function handleManualInput(flavor, maxAllowed) {
+            let total = 0;
+            const inputs = document.querySelectorAll('.custom-flavor-qty');
+            
+            // Calculamos cuánto suman los demás campos primero
+            inputs.forEach(el => {
+                if (el.getAttribute('data-flavor') !== flavor) {
+                    total += parseInt(el.value) || 0;
+                }
+            });
+            
+            const currentInput = document.getElementById(`qty-${flavor}`);
+            let currentVal = parseInt(currentInput.value) || 0;
+            
+            if (currentVal < 0) currentVal = 0;
+            
+            // Si lo que escribió supera el límite máximo permitido del combo, lo frenamos
+            if (total + currentVal > maxAllowed) {
+                currentVal = maxAllowed - total;
+                currentInput.value = currentVal;
+            }
+            
+            total += currentVal;
+            
+            // Sincronizamos el contador total en pantalla
+            const currentTotalEl = document.getElementById('custom-total-counter');
+            if (currentTotalEl) currentTotalEl.innerText = total;
+        }
+
+        // MODIFICADO: Ahora cambia .value en vez de .innerText
         function adjustCustomQty(flavor, change, maxAllowed) {
             const currentTotalEl = document.getElementById('custom-total-counter');
             let currentTotal = parseInt(currentTotalEl.innerText);
             const inputEl = document.getElementById(`qty-${flavor}`);
-            let currentVal = parseInt(inputEl.innerText);
+            let currentVal = parseInt(inputEl.value) || 0;
 
             if (change > 0 && currentTotal >= maxAllowed) return;
             if (change < 0 && currentVal <= 0) return;
@@ -549,10 +581,11 @@
             currentVal += change;
             currentTotal += change;
 
-            inputEl.innerText = currentVal;
+            inputEl.value = currentVal;
             currentTotalEl.innerText = currentTotal;
         }
 
+        // MODIFICADO: Lee .value en vez de .innerText
         function saveCustomization() {
             const product = currentProductCustomizing;
             let metaString = "";
@@ -562,7 +595,7 @@
                 let total = 0;
                 let flavorsChosen = [];
                 document.querySelectorAll('.custom-flavor-qty').forEach(el => {
-                    let qty = parseInt(el.innerText);
+                    let qty = parseInt(el.value) || 0;
                     if (qty > 0) {
                         total += qty;
                         flavorsChosen.push({ name: el.getAttribute('data-flavor'), qty: qty });
@@ -585,7 +618,7 @@
                     let total = 0;
                     let flavorsChosen = [];
                     document.querySelectorAll('.custom-flavor-qty').forEach(el => {
-                        let qty = parseInt(el.innerText);
+                        let qty = parseInt(el.value) || 0;
                         if (qty > 0) {
                             total += qty;
                             flavorsChosen.push({ name: el.getAttribute('data-flavor'), qty: qty });
