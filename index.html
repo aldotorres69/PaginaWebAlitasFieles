@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alitas Fieles - El Sabor que no traiciona</title>
+    
+    <link rel="icon" href="img/logo.png" type="image/png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-orange-50 text-gray-800">
+
+    <nav class="fixed w-full z-50 bg-black/95 backdrop-blur-md text-white py-2 px-4 md:px-8 shadow-xl flex justify-between items-center border-b border-orange-600/30">
+        <a href="#" class="flex items-center gap-3 group">
+            <img src="img/logo.png" 
+                 id="logo-img"
+                 alt="Logo Alitas Fieles" 
+                 class="w-12 h-12 md:w-14 md:h-14 object-contain group-hover:scale-105 transition duration-300">
+            
+            <div class="flex flex-col justify-center">
+                <span class="font-black text-lg md:text-2xl leading-none tracking-tighter text-white group-hover:text-orange-400 transition">
+                    ALITAS FIELES
+                </span>
+                <span class="text-[10px] md:text-xs text-orange-500 uppercase tracking-widest font-bold hidden sm:block leading-tight">
+                    El sabor que no traiciona
+                </span>
+            </div>
+        </a>
+
+        <button onclick="openMenu()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 px-4 md:px-6 rounded-full text-sm md:text-base transition transform hover:scale-105 shadow-md shadow-orange-600/20 flex items-center gap-2">
+            <i data-lucide="shopping-bag" size="18"></i> 
+            <span class="hidden md:inline">Pedir ahora</span>
+            <span class="md:hidden">Menú</span>
+        </button>
+    </nav>
+
+    <header class="hero-bg h-screen flex flex-col justify-center items-center text-center text-white px-4 pt-16">
+        <div class="inline-block mb-4 px-4 py-1 rounded-full bg-orange-600 text-xs font-bold uppercase tracking-wider animate-pulse">
+            🔥 100% Leales al sabor
+        </div>
+        <h1 class="text-4xl md:text-6xl font-black mb-4 leading-none uppercase drop-shadow-lg">
+            Aquí las alitas<br><span class="text-orange-500">Nunca te fallan.</span>
+        </h1>
+        <p class="text-lg md:text-xl mb-8 text-gray-200 max-w-lg font-medium drop-shadow-md">
+            Olvídate de las decepciones. Nuestras alas son amor verdadero al primer mordisco.
+        </p>
+        
+        <div id="dynamic-quote" class="mb-8 text-sm italic text-orange-200 bg-black/60 px-6 py-3 rounded-full backdrop-blur-sm border border-orange-500/30">
+        </div>
+
+        <button onclick="openMenu()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold py-4 px-12 rounded-full text-xl shadow-xl shadow-orange-600/40 transition transform hover:scale-105 flex items-center gap-3 animate-bounce hover:animate-none">
+            <i data-lucide="flame"></i> VER LA CARTA
+        </button>
+    </header>
+
+    <section id="historia-section" class="py-20 px-6 max-w-5xl mx-auto">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-black mb-4 uppercase text-gray-900">Nuestra Historia</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Nacimos con una misión: crear las alitas más crujientes y fieles de todo lima norte. 
+                Aquí no hay trampas, solo sabor real.
+            </p>
+        </div>
+
+        <div class="relative w-full h-64 md:h-[400px] rounded-2xl overflow-hidden shadow-2xl mb-12 group bg-gray-900">
+            <div class="carousel-slide absolute inset-0 opacity-100">
+                <img src="https://i.ibb.co/p6GqzbkR/29d5affd-33cf-48f7-a2b2-b58ca0aede85.jpg" class="w-full h-full object-cover">
+                <div class="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black/90 to-transparent text-white"><h3 class="font-bold text-xl">Calidad Suprema</h3></div>
+            </div>
+            <div class="carousel-slide absolute inset-0 opacity-0">
+                <img src="https://i.ibb.co/21nV1Rds/a17c11c4-0b8c-492a-9252-478021c7202a.jpg" class="w-full h-full object-cover">
+                <div class="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black/90 to-transparent text-white"><h3 class="font-bold text-xl">Salsas Caseras</h3></div>
+            </div>
+             <div class="carousel-slide absolute inset-0 opacity-0">
+                <img src="https://i.ibb.co/gFLv2M9B/d4edafc1-61ee-43d2-8856-29728ecc5f10.jpg" class="w-full h-full object-cover">
+                <div class="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black/90 to-transparent text-white"><h3 class="font-bold text-xl">Entrega Rápida</h3></div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 text-center">
+            <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-orange-500">
+                <i data-lucide="heart-handshake" class="mx-auto text-orange-600 mb-3" size="32"></i>
+                <h3 class="font-bold text-lg">Fidelidad</h3>
+                <p class="text-sm text-gray-500">Clientes felices que siempre vuelven.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-orange-500">
+                <i data-lucide="clock" class="mx-auto text-orange-600 mb-3" size="32"></i>
+                <h3 class="font-bold text-lg">Rapidez</h3>
+                <p class="text-sm text-gray-500">Del fuego a tu puerta en tiempo récord.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-orange-500">
+                <i data-lucide="party-popper" class="mx-auto text-orange-600 mb-3" size="32"></i>
+                <h3 class="font-bold text-lg">Sabor</h3>
+                <p class="text-sm text-gray-500">Recetas originales y adictivas.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-gray-900 text-white">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-black mb-12 text-orange-500 uppercase">Pasos para la felicidad</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="flex flex-col items-center group">
+                    <div class="bg-gray-800 p-5 rounded-2xl mb-4 text-orange-500 shadow-lg shadow-orange-500/10 group-hover:scale-110 transition duration-300">
+                        <i data-lucide="clipboard-list" size="32"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 leading-tight">1. Revisa nuestro menú digital</h4>
+                    <p class="text-xs text-gray-400 max-w-[160px]">Explora todas nuestras opciones.</p>
+                </div>
+                <div class="flex flex-col items-center group">
+                    <div class="bg-gray-800 p-5 rounded-2xl mb-4 text-orange-500 shadow-lg shadow-orange-500/10 group-hover:scale-110 transition duration-300">
+                        <i data-lucide="shopping-cart" size="32"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 leading-tight">2. Elige tus alitas y extras</h4>
+                    <p class="text-xs text-gray-400 max-w-[160px]">Arma tu pedido perfecto.</p>
+                </div>
+                <div class="flex flex-col items-center group">
+                    <div class="bg-gray-800 p-5 rounded-2xl mb-4 text-orange-500 shadow-lg shadow-orange-500/10 group-hover:scale-110 transition duration-300">
+                        <i data-lucide="send" size="32"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 leading-tight">3. Envía tu pedido por WhatsApp</h4>
+                    <p class="text-xs text-gray-400 max-w-[160px]">Con un solo clic llega a nosotros.</p>
+                </div>
+                <div class="flex flex-col items-center group">
+                    <div class="bg-gray-800 p-5 rounded-2xl mb-4 text-orange-500 shadow-lg shadow-orange-500/10 group-hover:scale-110 transition duration-300 border border-orange-500/30">
+                        <i data-lucide="package-check" size="32"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 leading-tight">4. Nosotros nos encargamos</h4>
+                    <p class="text-xs text-gray-400 max-w-[160px]">Del resto. 📦</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-4 max-w-6xl mx-auto relative bg-white rounded-3xl mt-10 shadow-sm border border-orange-100">
+        <div class="w-full h-48 md:h-72 rounded-2xl overflow-hidden mb-10 relative shadow-xl">
+            <img src="https://i.ibb.co/p6GqzbkR/29d5affd-33cf-48f7-a2b2-b58ca0aede85.jpg" class="w-full h-full object-cover filter brightness-75">
+            <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-4">
+                <span class="bg-red-600 text-white text-xs md:text-sm font-bold px-3 py-1 rounded-full uppercase mb-2 animate-pulse">Oferta de la semana</span>
+                <h3 class="text-3xl md:text-5xl font-black text-white uppercase drop-shadow-lg">Combos Fieles</h3>
+            </div>
+        </div>
+
+        <div class="text-center mb-8">
+             <h2 class="text-3xl font-black uppercase text-gray-800">Menú de Promociones</h2>
+        </div>
+       
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="promo-container">
+        </div>
+        
+        <div class="text-center mt-12">
+            <button onclick="openMenu()" class="text-orange-600 font-black text-xl hover:underline decoration-4 underline-offset-4">Ver Carta Completa →</button>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-16 px-6 border-t border-gray-200">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
+            <div>
+                <h3 class="text-2xl font-black text-gray-800 mb-6 flex items-center gap-2">
+                    <i data-lucide="map-pin" class="text-orange-600"></i> Encuéntranos
+                </h3>
+                <div class="w-full h-64 bg-gray-200 rounded-xl overflow-hidden shadow-inner relative">
+                    <iframe src="https://maps.google.com/maps?q=Av.%20Marco%20Polo%201488,%20San%20Mart%C3%ADn%20de%20Porres&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+                    <div class="absolute bottom-4 left-4 bg-white p-3 rounded-lg shadow-lg text-xs md:text-sm font-bold">
+                        📍 Av. Marco Polo 1488, San Martín de Porres 07031
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col justify-center">
+                <h3 class="text-2xl font-black text-gray-800 mb-6">Síguenos en redes</h3>
+                <p class="text-gray-600 mb-8">
+                    Entérate de las nuevas salsas y promos exclusivas.
+                </p>
+                
+                <div class="flex gap-4 mb-8">
+                    <a href="https://www.facebook.com/profile.php?id=61583618045193" target="_blank" class="bg-white text-gray-700 hover:bg-blue-600 hover:text-white p-3.5 rounded-full shadow-md transition flex items-center justify-center w-12 h-12" title="Facebook">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/alitasfieles/" target="_blank" class="bg-white text-gray-700 hover:bg-gradient-to-tr hover:from-orange-500 hover:via-pink-500 hover:to-purple-600 hover:text-white p-3.5 rounded-full shadow-md transition flex items-center justify-center w-12 h-12" title="Instagram">
+                        <svg class="w-5 h-5 stroke-current fill-none" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@alitasfieles?is_from_webapp=1&sender_device=pc" target="_blank" class="bg-white text-gray-700 hover:bg-black hover:text-white p-3.5 rounded-full shadow-md transition flex items-center justify-center w-12 h-12" title="TikTok">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31 0 2.571.42 3.611 1.2a8.312 8.312 0 0 0 4.542 1.34v3.18a11.455 11.455 0 0 1-4.542-1.34v8.13c0 4.39-3.561 7.95-7.951 7.95a7.952 7.952 0 0 1-7.952-7.95c0-4.39 3.561-7.95 7.952-7.95.42 0 .84.031 1.25.1v3.251a4.708 4.49 0 0 0-1.25-.17c-2.621 0-4.752 2.13-4.752 4.77 0 2.64 2.131 4.77 4.752 4.77 2.62 0 4.751-2.13 4.751-4.77V0h3.39z"/></svg>
+                    </a>
+                </div>
+
+                <div class="bg-orange-100 p-6 rounded-2xl border border-orange-200">
+                    <h4 class="font-bold text-orange-800 mb-2">Horario de Atención</h4>
+                    <p class="text-sm text-gray-700">Lun - Dom: 5:30 PM - 12:00 AM</p>
+                    <p class="text-xs text-orange-600 font-bold mt-2">¡Atendemos todos los días! 🔥</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black text-gray-500 py-8 text-center text-sm">
+        <p>© 2026 Alitas Fieles. Hecho con 🔥 y lealtad.</p>
+    </footer>
+
+    <div id="order-modal" class="fixed inset-0 z-[60] flex items-end md:items-center justify-center hidden-modal modal bg-black/80 backdrop-blur-sm p-0 md:p-4">
+        <div class="bg-white w-full md:w-[95%] lg:w-[600px] h-[100vh] md:h-[90vh] rounded-none md:rounded-3xl overflow-hidden flex flex-col relative shadow-2xl">
+            
+            <div class="bg-gray-50 p-4 border-b flex justify-between items-center shrink-0 z-10 shadow-sm relative">
+                <button onclick="showMenuStep()" id="btn-back-step" class="hidden absolute left-4 p-2 bg-white border border-gray-200 rounded-full hover:bg-gray-100 transition text-gray-700">
+                    <i data-lucide="arrow-left" size="20"></i>
+                </button>
+                
+                <div class="w-full text-center">
+                    <h3 class="font-black text-xl text-orange-600 leading-none tracking-tight">ALITAS FIELES</h3>
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wide" id="modal-subtitle">Carta Digital</p>
+                </div>
+
+                <button onclick="closeMenu()" class="absolute right-4 p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition text-gray-700"><i data-lucide="x" size="20"></i></button>
+            </div>
+
+            <div class="flex-1 overflow-hidden relative bg-gray-50">
+                <div id="step-1-menu" class="w-full h-full flex flex-col step-transition">
+                    <div class="flex-1 overflow-y-auto p-4 md:p-6 pb-24" id="menu-list">
+                    </div>
+
+                    <div id="bottom-bar" class="absolute bottom-0 w-full bg-white border-t p-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] hidden transform transition-transform duration-300 z-30">
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="text-gray-800">
+                                <p class="text-xs text-gray-500 uppercase font-bold">Total estimado</p>
+                                <p class="text-2xl font-black leading-none" id="bar-total">S/ 0.00</p>
+                            </div>
+                            <button onclick="showCheckoutStep()" class="bg-orange-600 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-orange-700 transition flex items-center gap-2 animate-bounce">
+                                Ver Pedido <i data-lucide="arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="step-customize" class="w-full h-full flex flex-col hidden step-transition bg-white p-6 overflow-y-auto">
+                    <div id="customize-content"></div>
+                </div>
+
+                <div id="step-2-checkout" class="w-full h-full flex flex-col hidden step-transition bg-white">
+                    <div class="flex-1 overflow-y-auto p-5">
+                        <h4 class="font-black text-lg mb-4 flex items-center gap-2"><i data-lucide="shopping-cart" class="text-orange-600"></i> Resumen del Pedido</h4>
+                        <div id="cart-items-summary" class="mb-6 space-y-3"></div>
+                        <div class="border-t-2 border-dashed border-gray-200 my-4"></div>
+                        <div class="flex justify-between items-end mb-6">
+                            <span class="text-gray-500 font-bold uppercase text-sm">Total a Pagar:</span>
+                            <span id="checkout-total" class="font-black text-3xl text-gray-800 leading-none">S/ 0.00</span>
+                        </div>
+
+                        <div class="bg-gray-50 p-5 rounded-xl border border-gray-100">
+                            <h4 class="font-bold text-gray-800 mb-4 text-sm uppercase">Completa tus datos</h4>
+                            
+                            <div class="mb-4">
+                                <label class="block text-xs font-bold text-gray-500 mb-1">TU NOMBRE</label>
+                                <input type="text" id="customer-name" placeholder="Ej. Aldo Torres" class="w-full border-2 border-gray-200 rounded-lg p-3 text-sm font-bold focus:border-orange-500 outline-none bg-white">
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="block text-xs font-bold text-gray-500 mb-2">MÉTODO DE ENTREGA</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="deliveryType" value="delivery" class="peer hidden" checked onchange="toggleDeliveryInfo()">
+                                        <div class="text-center py-3 border-2 border-gray-200 rounded-xl text-xs font-bold peer-checked:bg-orange-100 peer-checked:text-orange-800 peer-checked:border-orange-500 bg-white transition">
+                                            Delivery 🛵
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="deliveryType" value="pickup" class="peer hidden" onchange="toggleDeliveryInfo()">
+                                        <div class="text-center py-3 border-2 border-gray-200 rounded-xl text-xs font-bold peer-checked:bg-orange-100 peer-checked:text-orange-800 peer-checked:border-orange-500 bg-white transition">
+                                            Recojo 🏃
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="delivery-msg" class="mb-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-xs text-yellow-800 flex items-start gap-2">
+                                <i data-lucide="map-pin" size="14" class="mt-0.5 shrink-0 text-yellow-600"></i>
+                                <span>Te pediremos tu <strong>ubicación exacta</strong> por WhatsApp al enviar el pedido.</span>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-xs font-bold text-gray-500 mb-1">NOTAS / CONSULTAS</label>
+                                <textarea id="order-notes" rows="2" placeholder="Ej. Sin lechuga, sin cremas..." class="w-full border-2 border-gray-200 rounded-lg p-3 text-sm focus:border-orange-500 outline-none bg-white"></textarea>
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="block text-xs font-bold text-gray-500 mb-1">MÉTODO DE PAGO</label>
+                                <select id="payment-method" class="w-full border rounded-lg p-3 text-sm bg-white mb-3 font-medium outline-none">
+                                    <option value="Yape">📱 Yape</option>
+                                    <option value="Plin">📱 Plin</option>
+                                    <option value="Efectivo">💵 Efectivo</option>
+                                </select>
+                            </div>
+
+                            <button onclick="sendToWhatsApp()" class="w-full bg-green-500 hover:bg-green-600 text-white font-black uppercase py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg text-sm tracking-wide transform active:scale-95">
+                                <i data-lucide="brand-whatsapp" size="20"></i> Enviar Pedido a WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <button id="floating-btn" onclick="openMenu()" class="fixed bottom-6 right-6 bg-orange-600 text-white p-4 rounded-full shadow-2xl z-40 md:hidden animate-bounce border-4 border-white transition-opacity duration-500 opacity-0 pointer-events-none">
+        <i data-lucide="utensils-crossed" size="24"></i>
+    </button>
+
+    <script>
+        const WHATSAPP_NUMBER = "900694550"; 
+        
+        const SABORES_ALITAS = ["BBQ", "Acevichadas", "Búfalo Picante", "Anticucheras", "Doradas", "Broasters", "Maracuyá"];
+        const OPCIONES_GASEOSA = ["Coca Cola", "Inca Kola"];
+
+        const MENU = [
+            // --- PROMOCIONES ---
+            { id: 101, name: "Soltero.com", desc: "5 Alitas (1 sabor) + Gaseosa 1/2 litro.", price: 20.00, category: "Promociones", isPromo: true, image: "https://i.ibb.co/LXLMXLPL/Dise-o-sin-t-tulo.png", type: "wings_promo", totalWings: 5, maxFlavors: 1, hasSoda: true },
+            { id: 102, name: "Súper Fiel", desc: "12 Alitas (Hasta 3 sabores). Puedes combinarlas como gustes.", price: 36.90, category: "Promociones", isPromo: true, image: "https://i.ibb.co/LXLMXLPL/Dise-o-sin-t-tulo.png", type: "wings_promo", totalWings: 12, maxFlavors: 3, hasSoda: false },
+            { id: 103, name: "Combo Traición", desc: "20 Alitas (Hasta 2 sabores) + Pepsi 750 ml.", price: 50.00, category: "Promociones", isPromo: true, image: "https://i.ibb.co/LXLMXLPL/Dise-o-sin-t-tulo.png", type: "wings_promo", totalWings: 20, maxFlavors: 2, hasSoda: false, forcedSoda: "Pepsi 750 ml" },
+            { id: 104, name: "2 Pa 2", desc: "40 Alitas (Hasta 4 sabores) + Pepsi 1.5 Litros.", price: 90.00, category: "Promociones", isPromo: true, image: "https://i.ibb.co/LXLMXLPL/Dise-o-sin-t-tulo.png", type: "wings_promo", totalWings: 40, maxFlavors: 4, hasSoda: false, forcedSoda: "Pepsi 1.5L" },
+            
+            // --- NUEVAS PROMOS CON DÍAS CONFIGURADOS ---
+            { id: 110, name: "Martes de Fieles", desc: "5 Alitas (1 sabor). Incluye papas y cremas.", price: 15.90, category: "Promociones", isPromo: true, image: "https://i.ibb.co/LXLMXLPL/Dise-o-sin-t-tulo.png", type: "wings_promo", totalWings: 5, maxFlavors: 1, hasSoda: false, availableDays: [2] },
+            { id: 111, name: "Jueves de Infiel", desc: "15 Alitas (Hasta 3 sabores). Combínalas como quieras.", price: 34.90, category: "Promociones", isPromo: true, image: "https://i.ibb.co/LXLMXLPL/Dise-o-sin-t-tulo.png", type: "wings_promo", totalWings: 15, maxFlavors: 3, hasSoda: false, availableDays: [4] },
+            { id: 112, name: "Promo Duo Hamburguesas", desc: "2 Hamburguesas Clásicas + 2 Pepsi personales.", price: 24.90, category: "Promociones", isPromo: true, image: "https://i.ibb.co/WvMhd615/Dise-o-sin-t-tulo-1.png", type: "simple", metaDefault: "Incluye: 2 Hamburguesas Clásicas + 2 Pepsi Personales", availableDays: [1, 2, 3, 4, 5] },
+            { id: 113, name: "Promo Duo Salchipapas", desc: "2 Salchipapas Clásicas + 2 Pepsi personales.", price: 24.90, category: "Promociones", isPromo: true, image: "https://i.ibb.co/tTjV8xNn/Dise-o-sin-t-tulo-2.png", type: "simple", metaDefault: "Incluye: 2 Salchipapas Clásicas + 2 Pepsi Personales", availableDays: [1, 2, 3, 4, 5] },
+            { id: 114, name: "Promo Bienvenida", desc: "5 Alitas (1 sabor) + Pepsi personal + Papas y cremas.", price: 17.90, category: "Promociones", isPromo: true, image: "https://i.ibb.co/LXLMXLPL/Dise-o-sin-t-tulo.png", type: "wings_promo", totalWings: 5, maxFlavors: 1, hasSoda: false, forcedSoda: "Pepsi Personal + Papas y Cremas", availableDays: [1, 2, 3, 4, 5] },
+
+            // --- ALITAS (8 UNIDADES) ---
+            { id: 1, name: "Alitas de 8 Unidades (Personalizadas)", desc: "Elige hasta 2 sabores a tu gusto (Máx 8 und en total). Incluye papas y cremas.", price: 25.90, category: "Alitas", image: "https://i.ibb.co/Y47g68C7/Dise-o-sin-t-tulo-3.png", type: "wings_8" },
+
+            // --- HAMBURGUESAS ---
+            { id: 20, name: "La Clásica", desc: "Carne, Lechuga, Tomate, Papas.", price: 13.90, category: "Hamburguesas", image: "https://i.ibb.co/Mkr0rzkz/Dise-o-sin-t-tulo-5.png", type: "simple" },
+            { id: 21, name: "La Cubana", desc: "Carne, Lechuga, Tomate, Huevo, Plátano, Papas.", price: 15.90, category: "Hamburguesas", image: "https://i.ibb.co/Mkr0rzkz/Dise-o-sin-t-tulo-5.png", type: "simple" },
+            { id: 22, name: "La Simona", desc: "Carne, Lechuga, Tomate, Queso cheddar, Papas.", price: 16.90, category: "Hamburguesas", image: "https://i.ibb.co/Mkr0rzkz/Dise-o-sin-t-tulo-5.png", type: "simple" },
+            { id: 23, name: "La Hawaiana", desc: "Carne, Lechuga, Tomate, Queso cheddar, Piña, Papas.", price: 17.90, category: "Hamburguesas", image: "https://i.ibb.co/Mkr0rzkz/Dise-o-sin-t-tulo-5.png", type: "simple" },
+            { id: 24, name: "La Tramposa", desc: "Carne, Queso cheddar, Huevo, Tocino, Lechuga, Tomate, Papas.", price: 22.90, category: "Hamburguesas", image: "https://i.ibb.co/Mkr0rzkz/Dise-o-sin-t-tulo-5.png", type: "simple" },
+            { id: 25, name: "Todo Terreno", desc: "Doble carne, Doble queso cheddar, Tocino, Lechuga, Tomate, Papas.", price: 27.90, category: "Hamburguesas", image: "https://i.ibb.co/Mkr0rzkz/Dise-o-sin-t-tulo-5.png", type: "simple" },
+
+            // --- SALCHIPAPAS ---
+            { id: 30, name: "Salchipapa La Clásica", desc: "Salchicha Frankfurter, Papas.", price: 13.90, category: "Salchipapas", image: "https://i.ibb.co/rff0FN84/Dise-o-sin-t-tulo-4.png", type: "simple" },
+            { id: 31, name: "Salchipapa La Cubana", desc: "Salchicha Frankfurter, Huevo, Plátano, Papas.", price: 15.90, category: "Salchipapas", image: "https://i.ibb.co/rff0FN84/Dise-o-sin-t-tulo-4.png", type: "simple" },
+            { id: 32, name: "La Incondicional", desc: "Salchicha Frankfurter, Chorizo, Finas hierbas, Trozos de pollo, Papas.", price: 18.90, category: "Salchipapas", image: "https://i.ibb.co/rff0FN84/Dise-o-sin-t-tulo-4.png", type: "simple" },
+            { id: 33, name: "La Santa", desc: "Salchicha Frankfurter, Chorizo, Finas hierbas, Queso, Trozos de pollo, Papas.", price: 21.90, category: "Salchipapas", image: "https://i.ibb.co/rff0FN84/Dise-o-sin-t-tulo-4.png", type: "simple" },
+
+            // --- REFRESCOS ---
+            { id: 60, name: "1L Chicha Morada", desc: "Refresco natural casero.", price: 13.90, category: "Refrescos", image: "https://i.ibb.co/nshcSSTF/Dise-o-sin-t-tulo-7.png", type: "refresco", hasFrozen: false },
+            { id: 61, name: "1L Limonada", desc: "Fresca, ideal para acompañar tus alitas.", price: 13.90, category: "Refrescos", image: "https://i.ibb.co/nshcSSTF/Dise-o-sin-t-tulo-7.png", type: "refresco", hasFrozen: true, frozenPrice: 16.90 },
+            { id: 62, name: "1L Maracuyá", desc: "Sabor tropical natural.", price: 13.90, category: "Refrescos", image: "https://i.ibb.co/nshcSSTF/Dise-o-sin-t-tulo-7.png", type: "refresco", hasFrozen: true, frozenPrice: 16.90 },
+            { id: 63, name: "1L Maracumango", desc: "Combinación estelar de maracuyá y mango.", price: 13.90, category: "Refrescos", image: "https://i.ibb.co/nshcSSTF/Dise-o-sin-t-tulo-7.png", type: "refresco", hasFrozen: true, frozenPrice: 16.90 },
+            { id: 64, name: "1L Fresa Limón", desc: "Refrescante combinación ácida y dulce.", price: 13.90, category: "Refrescos", image: "https://i.ibb.co/nshcSSTF/Dise-o-sin-t-tulo-7.png", type: "refresco", hasFrozen: true, frozenPrice: 16.90 },
+
+            // --- GASEOSAS ---
+            { id: 70, name: "Gaseosa 1/2 L", desc: "Elegir sabor helado.", price: 5.00, category: "Gaseosas", image: "https://i.ibb.co/bjFxdPDT/Dise-o-sin-t-tulo-6.png", type: "gaseosa_select" },
+            { id: 71, name: "Gaseosa 1 L", desc: "Elegir sabor helado.", price: 10.00, category: "Gaseosas", image: "https://i.ibb.co/bjFxdPDT/Dise-o-sin-t-tulo-6.png", type: "gaseosa_select" },
+            { id: 72, name: "Gaseosa 1 1/2 L", desc: "Elegir sabor helado.", price: 12.00, category: "Gaseosas", image: "https://i.ibb.co/bjFxdPDT/Dise-o-sin-t-tulo-6.png", type: "gaseosa_select" },
+            { id: 73, name: "Pepsi 1 L", desc: "Gaseosa helada de un litro.", price: 7.00, category: "Gaseosas", image: "https://i.ibb.co/bjFxdPDT/Dise-o-sin-t-tulo-6.png", type: "simple" }
+        ];
+
+        let cart = {}; 
+        let currentProductCustomizing = null;
+
+        lucide.createIcons();
+        renderMenu();
+        startCarousel();
+
+        // AQUÍ SE AÑADE EL EVENTO DE SCROLL PARA MOSTRAR EL BOTÓN FLOTANTE
+        window.addEventListener('scroll', () => {
+            const historySection = document.getElementById('historia-section');
+            const floatingBtn = document.getElementById('floating-btn');
+            
+            if(historySection && floatingBtn) {
+                // Aparece un poco antes de llegar a la sección completa (offset - 300px)
+                if (window.scrollY > (historySection.offsetTop - 300)) {
+                    floatingBtn.classList.remove('opacity-0', 'pointer-events-none');
+                    floatingBtn.classList.add('opacity-100', 'pointer-events-auto');
+                } else {
+                    floatingBtn.classList.add('opacity-0', 'pointer-events-none');
+                    floatingBtn.classList.remove('opacity-100', 'pointer-events-auto');
+                }
+            }
+        });
+
+        const quotes = ["\"En la salud y en la enfermedad... y en el hambre.\"", "\"Amor es compartir tus alitas.\"", "\"Fieles a ti, fieles al sabor.\""];
+        document.getElementById('dynamic-quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+
+        function startCarousel() {
+            const slides = document.querySelectorAll('.carousel-slide');
+            let current = 0;
+            setInterval(() => {
+                slides[current].style.opacity = '0';
+                current = (current + 1) % slides.length;
+                slides[current].style.opacity = '1';
+            }, 4000);
+        }
+
+        function showMenuStep() {
+            document.getElementById('step-1-menu').classList.remove('hidden');
+            document.getElementById('step-2-checkout').classList.add('hidden');
+            document.getElementById('step-customize').classList.add('hidden');
+            document.getElementById('btn-back-step').classList.add('hidden');
+            document.getElementById('modal-subtitle').innerText = "Carta Digital";
+        }
+
+        function showCheckoutStep() {
+            if (Object.keys(cart).length === 0) return alert("Selecciona al menos un producto.");
+            document.getElementById('step-1-menu').classList.add('hidden');
+            document.getElementById('step-customize').classList.add('hidden');
+            document.getElementById('step-2-checkout').classList.remove('hidden');
+            document.getElementById('btn-back-step').remove('hidden');
+            document.getElementById('modal-subtitle').innerText = "Finalizar Pedido";
+            renderCheckoutSummary();
+        }
+
+        function handleAddButton(id) {
+            const product = MENU.find(p => p.id === id);
+            if (product.type === "simple") {
+                addToCartDirect(product, product.metaDefault || null);
+            } else {
+                openCustomizer(product);
+            }
+        }
+
+        function openCustomizer(product) {
+            currentProductCustomizing = product;
+            document.getElementById('step-1-menu').classList.add('hidden');
+            document.getElementById('step-customize').classList.remove('hidden');
+            document.getElementById('btn-back-step').classList.remove('hidden');
+            document.getElementById('modal-subtitle').innerText = "Personalizar Producto";
+
+            const container = document.getElementById('customize-content');
+            let html = `<h4 class="font-black text-xl text-gray-900 mb-2 uppercase">${product.name}</h4>`;
+            html += `<p class="text-sm text-gray-500 mb-6">${product.desc}</p>`;
+
+            if (product.type === "wings_8") {
+                html += `
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-orange-600 mb-2 uppercase">Selecciona Sabores (Suma total exacta de 8 unidades)</label>
+                        <div class="space-y-3 bg-gray-50 p-4 rounded-xl border">
+                            ${SABORES_ALITAS.map(sabor => `
+                                <div class="flex justify-between items-center bg-white p-2 rounded-lg border">
+                                    <span class="font-bold text-sm text-gray-800">${sabor}</span>
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" onclick="adjustCustomQty('${sabor}', -1, 8)" class="w-7 h-7 bg-gray-100 rounded-full font-bold text-gray-600 shadow-sm">-</button>
+                                        <span id="qty-${sabor}" class="w-6 text-center font-black text-base custom-flavor-qty" data-flavor="${sabor}">0</span>
+                                        <button type="button" onclick="adjustCustomQty('${sabor}', 1, 8)" class="w-7 h-7 bg-orange-500 rounded-full font-bold text-white shadow-sm">+</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <p class="text-xs font-bold mt-2 text-right text-gray-500">Unidades asignadas: <span id="custom-total-counter" class="text-orange-600">0</span>/8</p>
+                    </div>
+                `;
+            }
+
+            if (product.type === "wings_promo") {
+                if (product.maxFlavors === 1) {
+                    html += `
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-orange-600 mb-1 uppercase">Sabor de tus alitas (${product.totalWings} Und)</label>
+                            <select id="single-flavor-select" class="w-full border-2 border-gray-200 rounded-lg p-3 text-sm font-bold focus:border-orange-500 bg-white outline-none">
+                                ${SABORES_ALITAS.map(s => `<option value="${s}">${s}</option>`).join('')}
+                            </select>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-orange-600 mb-2 uppercase">Distribuye los sabores de tus alitas (Máx ${product.maxFlavors} sabores, suma exacta de ${product.totalWings} alitas)</label>
+                            <div class="space-y-3 bg-gray-50 p-4 rounded-xl border">
+                                ${SABORES_ALITAS.map(sabor => `
+                                    <div class="flex justify-between items-center bg-white p-2 rounded-lg border">
+                                        <span class="font-bold text-sm text-gray-800">${sabor}</span>
+                                        <div class="flex items-center gap-2">
+                                            <button type="button" onclick="adjustCustomQty('${sabor}', -1, ${product.totalWings})" class="w-7 h-7 bg-gray-100 rounded-full font-bold text-gray-600 shadow-sm">-</button>
+                                            <span id="qty-${sabor}" class="w-6 text-center font-black text-base custom-flavor-qty" data-flavor="${sabor}">0</span>
+                                            <button type="button" onclick="adjustCustomQty('${sabor}', 1, ${product.totalWings})" class="w-7 h-7 bg-orange-500 rounded-full font-bold text-white shadow-sm">+</button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <p class="text-xs font-bold mt-2 text-right text-gray-500">Unidades asignadas: <span id="custom-total-counter" class="text-orange-600">0</span>/${product.totalWings}</p>
+                        </div>
+                    `;
+                }
+
+                if (product.hasSoda) {
+                    html += `
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-orange-600 mb-1 uppercase">Elige tu Gaseosa Helada</label>
+                            <select id="soda-select-option" class="w-full border-2 border-gray-200 rounded-lg p-3 text-sm font-bold focus:border-orange-500 bg-white outline-none">
+                                ${OPCIONES_GASEOSA.map(g => `<option value="${g}">${g}</option>`).join('')}
+                            </select>
+                        </div>
+                    `;
+                }
+            }
+
+            if (product.type === "refresco") {
+                html += `
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-orange-600 mb-2">OPCIÓN DE PREPARACIÓN</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border cursor-pointer">
+                                <input type="radio" name="refrescoType" value="Normal" checked class="text-orange-600 focus:ring-orange-500">
+                                <span class="text-sm font-bold text-gray-800">Normal (S/ ${product.price.toFixed(2)})</span>
+                            </label>
+                            ${product.hasFrozen ? `
+                            <label class="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border cursor-pointer">
+                                <input type="radio" name="refrescoType" value="Frozen" class="text-orange-600 focus:ring-orange-500">
+                                <span class="text-sm font-bold text-gray-800">Frozen (S/ ${product.frozenPrice.toFixed(2)})</span>
+                            </label>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (product.type === "gaseosa_select") {
+                html += `
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-orange-600 mb-1 uppercase">Elige la marca</label>
+                        <select id="soda-individual-select" class="w-full border-2 border-gray-200 rounded-lg p-3 text-sm font-bold focus:border-orange-500 bg-white outline-none">
+                            ${OPCIONES_GASEOSA.map(g => `<option value="${g}">${g}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+            }
+
+            html += `
+                <button onclick="saveCustomization()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-black uppercase py-3 rounded-xl transition shadow-lg text-sm tracking-wide mt-4">
+                    Confirmar e Integrar al Pedido
+                </button>
+            `;
+            container.innerHTML = html;
+        }
+
+        function adjustCustomQty(flavor, change, maxAllowed) {
+            const currentTotalEl = document.getElementById('custom-total-counter');
+            let currentTotal = parseInt(currentTotalEl.innerText);
+            const inputEl = document.getElementById(`qty-${flavor}`);
+            let currentVal = parseInt(inputEl.innerText);
+
+            if (change > 0 && currentTotal >= maxAllowed) return;
+            if (change < 0 && currentVal <= 0) return;
+
+            currentVal += change;
+            currentTotal += change;
+
+            inputEl.innerText = currentVal;
+            currentTotalEl.innerText = currentTotal;
+        }
+
+        function saveCustomization() {
+            const product = currentProductCustomizing;
+            let metaString = "";
+            let finalPrice = product.price;
+
+            if (product.type === "wings_8") {
+                let total = 0;
+                let flavorsChosen = [];
+                document.querySelectorAll('.custom-flavor-qty').forEach(el => {
+                    let qty = parseInt(el.innerText);
+                    if (qty > 0) {
+                        total += qty;
+                        flavorsChosen.push({ name: el.getAttribute('data-flavor'), qty: qty });
+                    }
+                });
+
+                if (total !== 8) return alert("Por favor, distribuye exactamente un total de 8 alitas.");
+                if (flavorsChosen.length > 2) return alert("Puedes seleccionar un máximo de 2 sabores distintos.");
+
+                metaString = flavorsChosen.map(f => `${f.qty} ${f.name}`).join(' + ');
+            }
+
+            if (product.type === "wings_promo") {
+                let sodaPart = product.hasSoda ? ` c/ Gaseosa ${document.getElementById('soda-select-option').value}` : "";
+                sodaPart += product.forcedSoda ? ` (+ ${product.forcedSoda})` : "";
+                
+                if (product.maxFlavors === 1) {
+                    metaString = `Sabor: ${document.getElementById('single-flavor-select').value}${sodaPart}`;
+                } else {
+                    let total = 0;
+                    let flavorsChosen = [];
+                    document.querySelectorAll('.custom-flavor-qty').forEach(el => {
+                        let qty = parseInt(el.innerText);
+                        if (qty > 0) {
+                            total += qty;
+                            flavorsChosen.push({ name: el.getAttribute('data-flavor'), qty: qty });
+                        }
+                    });
+
+                    if (total !== product.totalWings) return alert(`Por favor, distribuye exactamente un total de ${product.totalWings} alitas.`);
+                    if (flavorsChosen.length > product.maxFlavors) return alert(`Esta promoción te permite un máximo de ${product.maxFlavors} sabores.`);
+
+                    metaString = flavorsChosen.map(f => `${f.qty} ${f.name}`).join(' + ') + sodaPart;
+                }
+            }
+
+            if (product.type === "refresco") {
+                const type = document.querySelector('input[name="refrescoType"]:checked').value;
+                metaString = `Opción: ${type}`;
+                if (type === "Frozen") finalPrice = product.frozenPrice;
+            }
+
+            if (product.type === "gaseosa_select") {
+                metaString = `Marca: ${document.getElementById('soda-individual-select').value}`;
+            }
+
+            const uniqueCartKey = `${product.id}_${metaString.replace(/\s+/g, '_')}`;
+            
+            if (!cart[uniqueCartKey]) {
+                cart[uniqueCartKey] = {
+                    id: product.id,
+                    name: product.name,
+                    price: finalPrice,
+                    qty: 1,
+                    meta: metaString
+                };
+            } else {
+                cart[uniqueCartKey].qty++;
+            }
+
+            updateUI();
+            showMenuStep();
+        }
+
+        function addToCartDirect(product, meta) {
+            const uniqueCartKey = `${product.id}_direct`;
+            if (!cart[uniqueCartKey]) {
+                cart[uniqueCartKey] = {
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    qty: 1,
+                    meta: meta || ""
+                };
+            } else {
+                cart[uniqueCartKey].qty++;
+            }
+            updateUI();
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('menu-list');
+            const promoContainer = document.getElementById('promo-container');
+            const categories = [...new Set(MENU.map(item => item.category))];
+            let menuHtml = '';
+            
+            const currentDay = new Date().getDay(); 
+
+            categories.forEach(cat => {
+                const itemsToRender = MENU.filter(item => 
+                    item.category === cat && 
+                    (!item.availableDays || item.availableDays.includes(currentDay))
+                );
+
+                if (itemsToRender.length === 0) return;
+
+                menuHtml += `<h4 class="font-black text-xl text-gray-800 mb-4 mt-8 uppercase border-b pb-2 border-orange-200">${cat}</h4>`;
+                
+                itemsToRender.forEach(item => {
+                    let totalQtyInCart = Object.values(cart)
+                        .filter(c => c.id === item.id)
+                        .reduce((sum, c) => sum + c.qty, 0);
+
+                    menuHtml += `
+                        <div class="flex gap-3 bg-white p-3 sm:p-4 rounded-xl shadow-sm mb-4 border border-gray-100 relative items-start">
+                            ${item.isPromo ? '<span class="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10">OFERTA</span>' : ''}
+                            <img src="${item.image}" class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover bg-gray-200 shrink-0 shadow-sm mt-0.5">
+                            <div class="flex-1 flex flex-col justify-between min-h-[80px] sm:min-h-[96px]">
+                                <div>
+                                    <h5 class="font-bold text-gray-900 text-sm sm:text-base leading-tight mb-1 pr-14">${item.name}</h5>
+                                    <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">${item.desc}</p>
+                                </div>
+                                <div class="flex justify-between items-center gap-2 mt-2 pt-1.5 border-t border-gray-100/60">
+                                    <span class="font-black text-base sm:text-lg text-orange-600 shrink-0">S/ ${item.price.toFixed(2)}</span>
+                                    <div class="flex flex-col items-end gap-1 shrink-0">
+                                        <button onclick="handleAddButton(${item.id})" class="bg-black text-white px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold hover:bg-orange-500 transition shadow-sm whitespace-nowrap">+ Agregar</button>
+                                        ${totalQtyInCart > 0 ? `<span class="bg-orange-100 text-orange-700 font-bold px-2 py-0.5 text-[9px] sm:text-[11px] rounded-full whitespace-nowrap">En carrito: ${totalQtyInCart}</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+            container.innerHTML = menuHtml;
+
+            const promos = MENU.filter(i => i.isPromo && (!i.availableDays || i.availableDays.includes(currentDay)));
+            promoContainer.innerHTML = promos.map(item => `
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-orange-100 hover:shadow-xl transition group">
+                    <div class="h-40 overflow-hidden relative"><img src="${item.image}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110"></div>
+                    <div class="p-5">
+                        <h3 class="font-black text-lg mb-1 leading-tight">${item.name}</h3>
+                        <p class="text-xs text-gray-400 mb-2">${item.desc}</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-2xl font-black text-gray-900">S/ ${item.price.toFixed(2)}</span>
+                            <button onclick="openMenu(); handleAddButton(${item.id})" class="text-orange-600 font-bold text-sm underline decoration-2">Pedir</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderCheckoutSummary() {
+            const container = document.getElementById('cart-items-summary');
+            const totalEl = document.getElementById('checkout-total');
+            const items = Object.entries(cart);
+            let total = 0;
+
+            if (items.length === 0) {
+                showMenuStep();
+                return;
+            }
+
+            container.innerHTML = items.map(([key, item]) => {
+                total += item.price * item.qty;
+                return `
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <div class="flex items-center gap-3">
+                         <div class="bg-white w-8 h-8 rounded flex items-center justify-center font-bold text-orange-600 border border-gray-200">x${item.qty}</div>
+                        <div>
+                            <div class="font-bold text-gray-800 text-sm">${item.name}</div>
+                            ${item.meta ? `<div class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full inline-block mt-0.5">${item.meta}</div>` : ''}
+                            <div class="text-xs text-gray-500 mt-0.5">S/ ${item.price.toFixed(2)} c/u</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="font-bold text-gray-800">S/ ${(item.price * item.qty).toFixed(2)}</div>
+                        <button onclick="removeGroup('${key}')" class="text-gray-400 hover:text-red-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+                    </div>
+                </div>`;
+            }).join('');
+            
+            totalEl.innerText = `S/ ${total.toFixed(2)}`;
+        }
+
+        function removeGroup(key) {
+            delete cart[key];
+            updateUI();
+            if (Object.keys(cart).length === 0) {
+                showMenuStep();
+            } else {
+                renderCheckoutSummary();
+            }
+        }
+
+        function updateUI() {
+            renderMenu();
+            const items = Object.values(cart);
+            const bottomBar = document.getElementById('bottom-bar');
+            const barTotal = document.getElementById('bar-total');
+            
+            if (items.length > 0) {
+                let total = items.reduce((sum, i) => sum + (i.price * i.qty), 0);
+                barTotal.innerText = `S/ ${total.toFixed(2)}`;
+                bottomBar.classList.remove('hidden');
+            } else {
+                bottomBar.classList.add('hidden');
+            }
+        }
+
+        function openMenu() {
+            document.getElementById('order-modal').classList.remove('hidden-modal');
+            document.body.style.overflow = 'hidden';
+            showMenuStep();
+        }
+
+        function closeMenu() {
+            document.getElementById('order-modal').classList.add('hidden-modal');
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleDeliveryInfo() {
+            const type = document.querySelector('input[name="deliveryType"]:checked').value;
+            const delMsg = document.getElementById('delivery-msg');
+            if (type === 'delivery') {
+                delMsg.classList.remove('hidden');
+            } else {
+                delMsg.classList.add('hidden');
+            }
+        }
+
+        function sendToWhatsApp() {
+            const items = Object.values(cart);
+            if (items.length === 0) return alert("Agrega algo al carrito primero");
+
+            const name = document.getElementById('customer-name').value.trim();
+            if (!name) return alert("Por favor escribe tu nombre.");
+            
+            const notes = document.getElementById('order-notes').value.trim();
+            const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+            let total = items.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+            let msg = `👋 Hola *Alitas Fieles*, soy *${name}* y deseo realizar un pedido:\n\n`;
+            items.forEach(i => {
+                msg += `▪️ *${i.name}* x${i.qty}\n`;
+                if(i.meta) msg += `   └ Detalles: _${i.meta}_\n`;
+                msg += `   └ Subtotal: S/ ${(i.price * i.qty).toFixed(2)}\n\n`;
+            });
+            msg += `💰 *Total a Pagar: S/ ${total.toFixed(2)}*\n\n`;
+            
+            if (deliveryType === 'delivery') {
+                msg += `🛵 *Entrega:* Delivery\n`;
+                msg += `📍 *Ubicación:* (Compartiré mi ubicación en tiempo real a continuación)\n`;
+            } else {
+                msg += `🏃 *Entrega:* Recojo en local\n`;
+            }
+            
+            if(notes) {
+                msg += `📝 *Notas de Cocina:* ${notes}\n`;
+            }
+
+            msg += `💳 *Método de Pago:* ${paymentMethod}\n\n`;
+            msg += `📱 _Pedido generado automáticamente desde Menú Digital_`;
+
+            window.open(`https://wa.me/51${900694550}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
