@@ -1,6 +1,6 @@
 /**
  * Cloudflare Worker: Backend para el Asistente IA "Fielcito" de Alitas Fieles
- * Modelo utilizado: Google Gemini (con detección automática y fallback de modelos)
+ * Modelo: Google Gemini 2.5 Flash
  */
 
 export default {
@@ -17,12 +17,10 @@ export default {
 
     const url = new URL(request.url);
 
-    // Endpoint para diagnosticar qué modelos soporta la API Key
+    // Diagnóstico de modelos
     if (request.method === "GET" && url.pathname === "/models") {
       const apiKey = env.GEMINI_API_KEY;
-      if (!apiKey) {
-        return new Response(JSON.stringify({ error: "Falta GEMINI_API_KEY" }), { status: 500, headers: corsHeaders });
-      }
+      if (!apiKey) return new Response(JSON.stringify({ error: "Falta GEMINI_API_KEY" }), { status: 500, headers: corsHeaders });
       try {
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
         const data = await res.json();
@@ -34,7 +32,7 @@ export default {
 
     if (request.method === "GET") {
       return new Response(
-        JSON.stringify({ status: "ok", service: "Fielcito IA Backend", version: "1.1.0" }),
+        JSON.stringify({ status: "ok", service: "Fielcito IA Backend", version: "1.2.0" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -50,10 +48,7 @@ export default {
       const apiKey = env.GEMINI_API_KEY;
       if (!apiKey) {
         return new Response(
-          JSON.stringify({
-            error: "Falta la variable de entorno GEMINI_API_KEY en Cloudflare Worker.",
-            hint: "Agrega GEMINI_API_KEY en Settings -> Variables and Secrets de tu Worker."
-          }),
+          JSON.stringify({ error: "Falta configurar GEMINI_API_KEY en Cloudflare." }),
           { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -63,7 +58,7 @@ export default {
 
       if (!Array.isArray(messages) || messages.length === 0) {
         return new Response(
-          JSON.stringify({ error: "El cuerpo debe contener un array 'messages'." }),
+          JSON.stringify({ error: "Se requiere un array de 'messages'." }),
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -107,21 +102,13 @@ Carta y Productos de Alitas Fieles:
    - Promo Bienvenida (ID 114, S/ 17.90): 5 Alitas (1 sabor) + Pepsi personal + papas y cremas (Lunes a Viernes).
 
 3. Alitas Regulares:
-   - Alitas de 8 Unidades Personalizadas (ID 1, S/ 25.90): Hasta 2 sabores (suma exacta de 8 alitas). Incluye papas y cremas.
+   - Alitas de 8 Unidades Personalizadas (ID 1, S/ 25.90): Hasta 2 sabores. Incluye papas y cremas.
 
 4. Hamburguesas (todas incluyen papas fritas):
-   - La Clásica (ID 20, S/ 13.90): Carne, lechuga, tomate.
-   - La Cubana (ID 21, S/ 15.90): Carne, lechuga, tomate, huevo frito, plátano frito.
-   - La Simona (ID 22, S/ 16.90): Carne, lechuga, tomate, queso cheddar.
-   - La Hawaiana (ID 23, S/ 17.90): Carne, lechuga, tomate, queso cheddar, piña.
-   - La Tramposa (ID 24, S/ 22.90): Carne, queso cheddar, huevo, tocino, lechuga, tomate.
-   - Todo Terreno (ID 25, S/ 27.90): Doble carne, doble queso cheddar, tocino, lechuga, tomate.
+   - La Clásica (ID 20, S/ 13.90), La Cubana (ID 21, S/ 15.90), La Simona (ID 22, S/ 16.90), La Hawaiana (ID 23, S/ 17.90), La Tramposa (ID 24, S/ 22.90), Todo Terreno (ID 25, S/ 27.90).
 
 5. Salchipapas:
-   - Salchipapa La Clásica (ID 30, S/ 13.90): Salchicha Frankfurter y papas.
-   - Salchipapa La Cubana (ID 31, S/ 15.90): Salchicha Frankfurter, huevo, plátano frito, papas.
-   - La Incondicional (ID 32, S/ 18.90): Salchicha Frankfurter, chorizo, finas hierbas, trozos de pollo, papas.
-   - La Santa (ID 33, S/ 21.90): Salchicha Frankfurter, chorizo, finas hierbas, trozos de pollo, queso derretido, papas.
+   - Salchipapa La Clásica (ID 30, S/ 13.90), Salchipapa La Cubana (ID 31, S/ 15.90), La Incondicional (ID 32, S/ 18.90), La Santa (ID 33, S/ 21.90).
 
 6. Bebidas:
    - Refrescos 1L (S/ 13.90 normal / S/ 16.90 frozen): Limonada, Maracuyá, Maracumango, Fresa Limón. Chicha Morada Casera (S/ 13.90).
@@ -130,10 +117,6 @@ Carta y Productos de Alitas Fieles:
 REGLA DE ACCIÓN PARA EL FRONTEND (MUY IMPORTANTE):
 Cuando recomiendes uno o varios productos específicos que el usuario podría querer pedir, añade al final de tu mensaje o mención la etiqueta especial con el ID numérico:
 [PRODUCTO:ID]
-Ejemplos:
-- Si recomiendas el Combo Traición: "Te recomiendo el **Combo Traición** (20 alitas + Pepsi) [PRODUCTO:103] para que disfruten entre 2 o 3."
-- Si recomiendas La Incondicional: "Nuestra salchipapa estrella es **La Incondicional** [PRODUCTO:32]."
-- Si recomiendas varias cosas: "Puedes pedir el **Súper Fiel** [PRODUCTO:102] y refrescarlo con una **Chicha Morada de 1L** [PRODUCTO:60]."
 El frontend de la página web convertirá automáticamente [PRODUCTO:ID] en una tarjeta interactiva con un botón directo para que el cliente lo agregue o personalice con un solo toque.
 `;
 
@@ -142,15 +125,12 @@ El frontend de la página web convertirá automáticamente [PRODUCTO:ID] en una 
         parts: [{ text: msg.content }]
       }));
 
-      // Lista de modelos compatibles en orden de preferencia (soporta versiones 2.5, 2.0 y 1.5)
+      // Modelos confirmados disponibles en la API Key de Google
       const candidateModels = [
         "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-2.0-flash-exp",
-        "gemini-1.5-flash-latest",
-        "gemini-1.5-flash",
-        "gemini-1.5-flash-8b",
-        "gemini-pro"
+        "gemini-flash-latest",
+        "gemini-2.5-pro",
+        "gemini-flash-lite-latest"
       ];
 
       let lastError = null;
@@ -163,13 +143,13 @@ El frontend de la página web convertirá automáticamente [PRODUCTO:ID] en una 
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              systemInstruction: {
+              system_instruction: {
                 parts: [{ text: SYSTEM_PROMPT }]
               },
               contents: geminiContents,
               generationConfig: {
                 temperature: 0.7,
-                maxOutputTokens: 600,
+                maxOutputTokens: 600
               }
             })
           });
@@ -180,16 +160,16 @@ El frontend de la página web convertirá automáticamente [PRODUCTO:ID] en una 
             if (reply) break;
           } else {
             const errText = await res.text();
-            lastError = `Modelo ${model} falló (${res.status}): ${errText}`;
+            lastError = `Modelo ${model} (${res.status}): ${errText}`;
           }
         } catch (e) {
-          lastError = `Excepción con modelo ${model}: ${e.message}`;
+          lastError = `Error con ${model}: ${e.message}`;
         }
       }
 
       if (!reply) {
         return new Response(
-          JSON.stringify({ error: "Ningún modelo de Gemini respondió con éxito", details: lastError }),
+          JSON.stringify({ error: "Ningún modelo respondió", details: lastError }),
           { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -200,7 +180,6 @@ El frontend de la página web convertirá automáticamente [PRODUCTO:ID] en una 
       );
 
     } catch (error) {
-      console.error("Worker Error:", error);
       return new Response(
         JSON.stringify({ error: error.message || "Error interno del servidor" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
