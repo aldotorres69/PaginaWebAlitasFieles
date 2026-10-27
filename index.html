@@ -320,7 +320,7 @@
     </div>
 
     <!-- MODAL / DRAWER CHATBOT ASISTENTE IA -->
-    <div id="ai-chat-modal" class="fixed bottom-0 sm:bottom-6 left-0 sm:left-6 z-50 w-full sm:w-[390px] h-[90dvh] sm:h-[560px] bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-orange-200 flex flex-col hidden-modal transition-all duration-300 overflow-hidden">
+    <div id="ai-chat-modal" class="fixed bottom-0 sm:bottom-6 left-0 sm:left-6 z-50 w-full sm:w-[400px] h-[86dvh] sm:h-[580px] bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-orange-200 flex flex-col hidden-modal transition-all duration-300 overflow-hidden box-border">
         <!-- Header -->
         <div class="bg-gradient-to-r from-gray-950 via-gray-900 to-black text-white p-3.5 sm:p-4 border-b border-orange-600/30 flex items-center justify-between shrink-0 shadow-md">
             <div class="flex items-center gap-2.5">
@@ -344,11 +344,11 @@
         </div>
 
         <!-- Chat Messages Container -->
-        <div id="ai-messages-container" class="flex-1 overflow-y-auto p-3.5 sm:p-4 space-y-3 bg-gray-50/80 text-xs sm:text-sm">
+        <div id="ai-messages-container" class="flex-1 overflow-y-auto overflow-x-hidden p-3.5 sm:p-4 space-y-3 bg-gray-50/80 text-xs sm:text-sm box-border w-full">
             <!-- Mensaje de bienvenida inicial -->
-            <div class="flex items-start gap-2 max-w-[90%]">
-                <div class="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold shadow-sm">🍗</div>
-                <div class="ai-bubble-bot p-3 rounded-2xl shadow-sm text-gray-800 leading-relaxed text-xs">
+            <div class="w-full flex items-start gap-2.5">
+                <div class="w-7 h-7 rounded-full bg-orange-600 text-white flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-sm">🍗</div>
+                <div class="ai-bubble-bot p-3.5 rounded-2xl rounded-tl-sm text-gray-800 leading-relaxed text-xs shadow-sm">
                     <p class="font-bold text-orange-600 mb-1">¡Hola causita! 👋</p>
                     <p>Soy <strong>Fielcito</strong>, tu asesor gastronómico con Inteligencia Artificial. ¿No sabes qué sabor elegir, buscas una promo para compartir o tienes dudas sobre el delivery?</p>
                     <p class="mt-2 text-gray-500 text-[11px]">¡Dime cuántas personas son o elige una opción rápida abajo! 👇</p>
@@ -997,36 +997,32 @@
             lucide.createIcons();
         }
 
-        function parseAIResponseFormatting(text) {
-            if (!text) return "";
-            
-            // 1. Convertir etiquetas [PRODUCTO:ID] en tarjetas interactivas de compra
-            const productTagRegex = /\[PRODUCTO:\s*(\d+)\]/gi;
-            let formatted = text.replace(productTagRegex, (match, id) => {
-                const productId = parseInt(id, 10);
-                const item = MENU.find(m => m.id === productId);
-                if (!item) return "";
-                return `
-                    <div class="my-2 p-2.5 bg-orange-50 border border-orange-200 rounded-xl flex items-center justify-between gap-2 shadow-2xs">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <img src="${item.image}" alt="${item.name}" class="w-11 h-11 rounded-lg object-cover bg-gray-200 shrink-0 border border-orange-200/80">
-                            <div class="min-w-0">
-                                <p class="font-bold text-gray-900 text-xs truncate">${item.name}</p>
-                                <p class="font-black text-orange-600 text-xs">S/ ${item.price.toFixed(2)}</p>
-                            </div>
-                        </div>
-                        <button type="button" onclick="aiOrderProduct(${item.id})" class="bg-orange-600 hover:bg-orange-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full shrink-0 shadow-sm transition active:scale-95 flex items-center gap-1">
-                            <i data-lucide="plus" size="12"></i> Pedir
-                        </button>
+        function renderSingleProductCard(productId) {
+            const item = MENU.find(m => m.id == productId);
+            if (!item) return '';
+            return `
+                <div class="w-full bg-white border border-orange-200 hover:border-orange-400 rounded-xl p-2.5 shadow-sm transition flex items-center justify-between gap-2.5 box-border">
+                    <img src="${item.image}" alt="${item.name}" class="w-12 h-12 rounded-lg object-cover bg-gray-100 shrink-0 border border-orange-100">
+                    <div class="flex-1 min-w-0 pr-1">
+                        <h6 class="font-black text-gray-900 text-xs truncate leading-tight">${item.name}</h6>
+                        <p class="text-[10px] text-gray-500 truncate mt-0.5 leading-tight">${item.desc}</p>
+                        <span class="font-black text-orange-600 text-xs inline-block mt-0.5">S/ ${item.price.toFixed(2)}</span>
                     </div>
-                `;
-            });
+                    <button type="button" onclick="aiOrderProduct(${item.id})" class="bg-orange-600 hover:bg-orange-500 active:scale-95 text-white font-black text-[11px] px-3 py-1.5 rounded-lg shrink-0 shadow-sm transition flex items-center gap-1">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Pedir
+                    </button>
+                </div>
+            `;
+        }
 
-            // 2. Formato Markdown básico
-            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            formatted = formatted.replace(/\n\n/g, '<p class="mt-1.5"></p>');
-            formatted = formatted.replace(/\n/g, '<br>');
-            return formatted;
+        function formatMarkdownText(rawText) {
+            if (!rawText) return '';
+            let t = rawText;
+            t = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            t = t.replace(/^[*-]\s+(.*)$/gim, '• $1');
+            t = t.replace(/\n\n/g, '<p class="mt-1.5"></p>');
+            t = t.replace(/\n/g, '<br>');
+            return t;
         }
 
         function aiOrderProduct(id) {
@@ -1049,11 +1045,11 @@
             const chips = document.getElementById('ai-quick-chips');
             if (chips) chips.remove();
 
-            // Mensaje del usuario
+            // Mensaje del usuario (alineado a la derecha)
             const userBubble = document.createElement('div');
-            userBubble.className = "flex items-start justify-end gap-2";
+            userBubble.className = "w-full flex justify-end";
             userBubble.innerHTML = `
-                <div class="ai-bubble-user p-3 rounded-2xl shadow-sm text-xs max-w-[85%] leading-relaxed">
+                <div class="ai-bubble-user p-3 rounded-2xl rounded-tr-sm shadow-sm text-xs max-w-[85%] leading-relaxed break-words">
                     ${userText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
                 </div>
             `;
@@ -1073,11 +1069,13 @@
 
             try {
                 if (AI_WORKER_URL && AI_WORKER_URL.trim() !== "") {
+                    // Enviamos solo los últimos 6 mensajes para máxima rapidez
+                    const payloadMessages = aiChatHistory.slice(-6);
                     const res = await fetch(AI_WORKER_URL, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            messages: aiChatHistory
+                            messages: payloadMessages
                         })
                     });
 
@@ -1088,7 +1086,7 @@
                     const data = await res.json();
                     botReplyText = data.reply || "Disculpa causita, tuve un pequeño cruce. ¿Me repites tu consulta?";
                 } else {
-                    await new Promise(r => setTimeout(r, 500));
+                    await new Promise(r => setTimeout(r, 400));
                     botReplyText = getAIFallbackResponse(userText);
                 }
             } catch (err) {
@@ -1103,15 +1101,43 @@
 
             aiChatHistory.push({ role: "model", content: botReplyText });
 
-            const botBubble = document.createElement('div');
-            botBubble.className = "flex items-start gap-2 max-w-[92%]";
-            botBubble.innerHTML = `
-                <div class="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold shadow-sm">🍗</div>
-                <div class="ai-bubble-bot p-3 rounded-2xl shadow-sm leading-relaxed text-xs">
-                    ${parseAIResponseFormatting(botReplyText)}
+            // 1. Extraer los IDs de productos recomendados
+            const productIds = [];
+            const tagRegex = /\[PRODUCTO:\s*(\d+)\]/gi;
+            let match;
+            while ((match = tagRegex.exec(botReplyText)) !== null) {
+                const id = parseInt(match[1], 10);
+                if (!productIds.includes(id)) productIds.push(id);
+            }
+
+            // 2. Limpiar texto de tags y formatear markdown
+            const cleanText = botReplyText.replace(/\[PRODUCTO:\s*(\d+)\]/gi, '').trim();
+            const formattedHtml = formatMarkdownText(cleanText);
+
+            // 3. Crear el mensaje del bot y las tarjetas separadas limpias
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = "w-full space-y-2 box-border";
+
+            let cardsHtml = '';
+            if (productIds.length > 0) {
+                cardsHtml = `
+                    <div class="pl-9 pr-1 space-y-2 w-full box-border">
+                        ${productIds.map(id => renderSingleProductCard(id)).join('')}
+                    </div>
+                `;
+            }
+
+            messageWrapper.innerHTML = `
+                <div class="w-full flex items-start gap-2.5">
+                    <div class="w-7 h-7 rounded-full bg-orange-600 text-white flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-sm">🍗</div>
+                    <div class="ai-bubble-bot p-3.5 rounded-2xl rounded-tl-sm text-xs leading-relaxed shadow-sm">
+                        ${formattedHtml}
+                    </div>
                 </div>
+                ${cardsHtml}
             `;
-            container.appendChild(botBubble);
+
+            container.appendChild(messageWrapper);
             lucide.createIcons();
             container.scrollTop = container.scrollHeight;
         }

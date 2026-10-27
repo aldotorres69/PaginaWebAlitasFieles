@@ -9,7 +9,6 @@ body {
    FONDOS Y PORTADA
    ========================================== */
 .hero-bg {
-    /* Fondo principal: Si cambias la ruta de tu imagen, hazlo aquí */
     background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('img/fondo-principal.jpeg'); 
     background-size: cover;
     background-position: center;
@@ -50,21 +49,20 @@ body {
 /* ==========================================
    ESTILOS PARA PERSONALIZACIÓN DE PRODUCTOS
    ========================================== */
-/* Convertido a CSS nativo para que funcione con el CDN de Tailwind */
 .flavor-select, .soda-select {
-    border: 2px solid #e5e7eb; /* border-gray-200 */
-    border-radius: 0.5rem;     /* rounded-lg */
-    padding: 0.5rem;           /* p-2 */
-    font-size: 0.875rem;       /* text-sm */
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.875rem;
     line-height: 1.25rem;
-    background-color: #ffffff; /* bg-white */
-    font-weight: 500;          /* font-medium */
-    outline: none;             /* outline-none */
+    background-color: #ffffff;
+    font-weight: 500;
+    outline: none;
     transition: border-color 0.2s ease-in-out;
 }
 
 .flavor-select:focus, .soda-select:focus {
-    border-color: #f97316;     /* focus:border-orange-500 */
+    border-color: #f97316;
 }
 
 .badge-detail {
@@ -77,6 +75,7 @@ body {
     display: inline-block;
     margin-top: 4px;
 }
+
 button {
     touch-action: manipulation;
 }
@@ -84,6 +83,13 @@ button {
 /* ==========================================
    WIDGET ASISTENTE IA (FIELCITO)
    ========================================== */
+#ai-messages-container {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
 #ai-messages-container::-webkit-scrollbar {
     width: 5px;
 }
@@ -102,6 +108,10 @@ button {
     background-color: #ea580c;
     color: #ffffff;
     border-bottom-right-radius: 4px;
+    max-width: 85%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
 }
 
 .ai-bubble-bot {
@@ -109,10 +119,27 @@ button {
     color: #1f2937;
     border-bottom-left-radius: 4px;
     border: 1px solid #e5e7eb;
+    max-width: 85%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
 }
 
 .ai-bubble-bot strong {
     color: #c2410c;
+}
+
+.ai-bubble-bot ul {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.ai-card-item {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
 }
 
 @keyframes aiGlow {
