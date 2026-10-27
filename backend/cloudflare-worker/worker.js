@@ -1,26 +1,40 @@
 /**
  * Cloudflare Worker: Backend para el Asistente IA "Fielcito" de Alitas Fieles
- * Modelo utilizado: Google Gemini 1.5 Flash (Gratuito en Google AI Studio)
+ * Modelo utilizado: Google Gemini (con detección automática y fallback de modelos)
  */
 
 export default {
   async fetch(request, env, ctx) {
-    // Configuración de encabezados CORS para permitir peticiones desde tu web
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS, GET",
       "Access-Control-Allow-Headers": "Content-Type",
     };
 
-    // Responder preflight OPTIONS
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders });
     }
 
-    // Ruta de estado de salud
+    const url = new URL(request.url);
+
+    // Endpoint para diagnosticar qué modelos soporta la API Key
+    if (request.method === "GET" && url.pathname === "/models") {
+      const apiKey = env.GEMINI_API_KEY;
+      if (!apiKey) {
+        return new Response(JSON.stringify({ error: "Falta GEMINI_API_KEY" }), { status: 500, headers: corsHeaders });
+      }
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        const data = await res.json();
+        return new Response(JSON.stringify(data), { status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      } catch (e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: corsHeaders });
+      }
+    }
+
     if (request.method === "GET") {
       return new Response(
-        JSON.stringify({ status: "ok", service: "Fielcito IA Backend", version: "1.0.0" }),
+        JSON.stringify({ status: "ok", service: "Fielcito IA Backend", version: "1.1.0" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -33,7 +47,6 @@ export default {
     }
 
     try {
-      // 1. Obtener API KEY de las variables de entorno de Cloudflare
       const apiKey = env.GEMINI_API_KEY;
       if (!apiKey) {
         return new Response(
@@ -45,7 +58,6 @@ export default {
         );
       }
 
-      // 2. Parsear el body enviado desde el frontend
       const body = await request.json();
       const messages = body.messages || [];
 
@@ -56,7 +68,6 @@ export default {
         );
       }
 
-      // 3. System Prompt con todo el conocimiento de Alitas Fieles
       const SYSTEM_PROMPT = `
 Eres "Fielcito 🍗", el mesero virtual, asesor gastronómico y asistente inteligente oficial de la pollería "Alitas Fieles" ("El sabor que no traiciona"), ubicada en Av. Marco Polo 1488, San Martín de Porres (Lima, Perú).
 
@@ -126,41 +137,62 @@ Ejemplos:
 El frontend de la página web convertirá automáticamente [PRODUCTO:ID] en una tarjeta interactiva con un botón directo para que el cliente lo agregue o personalice con un solo toque.
 `;
 
-      // 4. Transformar historial al formato de Gemini
       const geminiContents = messages.map(msg => ({
         role: msg.role === "assistant" ? "model" : "user",
         parts: [{ text: msg.content }]
       }));
 
-      // 5. Llamada a Gemini 1.5 Flash
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      // Lista de modelos compatibles en orden de preferencia (soporta versiones 2.5, 2.0 y 1.5)
+      const candidateModels = [
+        "gemini-2.5-flash",
+        "gemini-2.0-flash",
+        "gemini-2.0-flash-exp",
+        "gemini-1.5-flash-latest",
+        "gemini-1.5-flash",
+        "gemini-1.5-flash-8b",
+        "gemini-pro"
+      ];
 
-      const geminiResponse = await fetch(geminiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: {
-            parts: [{ text: SYSTEM_PROMPT }]
-          },
-          contents: geminiContents,
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 600,
+      let lastError = null;
+      let reply = null;
+
+      for (const model of candidateModels) {
+        try {
+          const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+          const res = await fetch(geminiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              systemInstruction: {
+                parts: [{ text: SYSTEM_PROMPT }]
+              },
+              contents: geminiContents,
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 600,
+              }
+            })
+          });
+
+          if (res.ok) {
+            const geminiData = await res.json();
+            reply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (reply) break;
+          } else {
+            const errText = await res.text();
+            lastError = `Modelo ${model} falló (${res.status}): ${errText}`;
           }
-        })
-      });
-
-      if (!geminiResponse.ok) {
-        const errDetail = await geminiResponse.text();
-        console.error("Gemini API Error:", errDetail);
-        return new Response(
-          JSON.stringify({ error: "Error de comunicación con Gemini", details: errDetail }),
-          { status: geminiResponse.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        } catch (e) {
+          lastError = `Excepción con modelo ${model}: ${e.message}`;
+        }
       }
 
-      const geminiData = await geminiResponse.json();
-      const reply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "Disculpa, no pude procesar tu mensaje. ¿Me repites tu duda?";
+      if (!reply) {
+        return new Response(
+          JSON.stringify({ error: "Ningún modelo de Gemini respondió con éxito", details: lastError }),
+          { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
 
       return new Response(
         JSON.stringify({ reply }),
