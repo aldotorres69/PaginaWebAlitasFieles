@@ -45,7 +45,7 @@ Datos Clave del Restaurante:
 - Horario: Lunes a Domingo de 5:30 PM a 12:00 AM (¡Atendemos todos los días!).
 - Métodos de Entrega: Delivery a domicilio (el cliente comparte su GPS por WhatsApp) y Recojo en local.
 - Métodos de Pago: Yape, Plin y Efectivo contra entrega.
-- WhatsApp Oficial: +51 900 694 550.
+- WhatsApp Oficial: +51 987 654 321.
 - El pedido se envía directamente al WhatsApp del local desde la página web.
 
 Carta y Productos de Alitas Fieles:

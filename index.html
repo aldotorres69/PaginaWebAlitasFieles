@@ -392,7 +392,7 @@
     </button>
 
     <script>
-        const WHATSAPP_NUMBER = "900694550"; 
+        const WHATSAPP_NUMBER = "987654321"; 
         
         const SABORES_ALITAS = ["BBQ", "Acevichadas", "Búfalo Picante", "Anticucheras", "Doradas", "Broasters", "Maracuyá"];
         const OPCIONES_GASEOSA = ["Coca Cola", "Inca Kola"];
@@ -933,7 +933,7 @@
             msg += `💳 *Método de Pago:* ${paymentMethod}\n\n`;
             msg += `📱 _Pedido generado automáticamente desde Menú Digital_`;
 
-            window.open(`https://wa.me/51900694550?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/51${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         // ==========================================
