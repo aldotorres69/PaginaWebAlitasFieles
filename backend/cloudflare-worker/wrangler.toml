@@ -1,0 +1,7 @@
+name = "alitas-fieles-ai"
+main = "worker.js"
+compatibility_date = "2026-10-27"
+
+[vars]
+# Tu GEMINI_API_KEY se debe configurar como Secret en Cloudflare Dashboard
+# o ejecutando: npx wrangler secret put GEMINI_API_KEY

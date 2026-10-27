@@ -306,6 +306,87 @@
         </div>
     </div>
 
+    <!-- BOTÓN FLOTANTE ASISTENTE IA (FIELCITO) -->
+    <div id="ai-floating-trigger" class="fixed bottom-6 left-4 sm:left-6 z-40 flex items-center group cursor-pointer" onclick="toggleAIChat()">
+        <button type="button" class="ai-glow-pulse bg-gradient-to-r from-orange-600 via-amber-600 to-orange-500 text-white p-3.5 sm:px-4 sm:py-3 rounded-full shadow-2xl border-2 border-white flex items-center gap-2 hover:scale-105 transition transform active:scale-95">
+            <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-300 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-400"></span>
+            </span>
+            <i data-lucide="sparkles" size="18" class="text-yellow-200"></i>
+            <span class="hidden sm:inline font-bold text-xs sm:text-sm tracking-wide">¿Qué pido hoy? IA</span>
+            <span class="sm:hidden font-black text-xs">Asistente IA</span>
+        </button>
+    </div>
+
+    <!-- MODAL / DRAWER CHATBOT ASISTENTE IA -->
+    <div id="ai-chat-modal" class="fixed bottom-0 sm:bottom-6 left-0 sm:left-6 z-50 w-full sm:w-[390px] h-[90dvh] sm:h-[560px] bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-orange-200 flex flex-col hidden-modal transition-all duration-300 overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-gray-950 via-gray-900 to-black text-white p-3.5 sm:p-4 border-b border-orange-600/30 flex items-center justify-between shrink-0 shadow-md">
+            <div class="flex items-center gap-2.5">
+                <div class="relative w-9 h-9 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center font-black text-base shadow-inner border border-orange-300/40 text-white">
+                    🍗
+                    <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-gray-900 rounded-full"></span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <h4 class="font-black text-sm sm:text-base leading-tight tracking-tight text-white">Fielcito IA</h4>
+                        <span class="text-[9px] bg-orange-600/90 text-orange-100 font-bold px-1.5 py-0.5 rounded-full uppercase">Online</span>
+                    </div>
+                    <p class="text-[10px] sm:text-[11px] text-gray-400 font-medium">Asesor oficial de Alitas Fieles</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-1">
+                <button type="button" onclick="toggleAIChat()" class="p-1.5 text-gray-400 hover:text-white hover:bg-gray-800 rounded-full transition" title="Cerrar">
+                    <i data-lucide="x" size="20"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages Container -->
+        <div id="ai-messages-container" class="flex-1 overflow-y-auto p-3.5 sm:p-4 space-y-3 bg-gray-50/80 text-xs sm:text-sm">
+            <!-- Mensaje de bienvenida inicial -->
+            <div class="flex items-start gap-2 max-w-[90%]">
+                <div class="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold shadow-sm">🍗</div>
+                <div class="ai-bubble-bot p-3 rounded-2xl shadow-sm text-gray-800 leading-relaxed text-xs">
+                    <p class="font-bold text-orange-600 mb-1">¡Hola causita! 👋</p>
+                    <p>Soy <strong>Fielcito</strong>, tu asesor gastronómico con Inteligencia Artificial. ¿No sabes qué sabor elegir, buscas una promo para compartir o tienes dudas sobre el delivery?</p>
+                    <p class="mt-2 text-gray-500 text-[11px]">¡Dime cuántas personas son o elige una opción rápida abajo! 👇</p>
+                </div>
+            </div>
+
+            <!-- Chips de sugerencias rápidas -->
+            <div id="ai-quick-chips" class="pt-1 pb-1 flex flex-wrap gap-1.5">
+                <button type="button" onclick="sendQuickPrompt('¿Qué salsas tienen y cuáles no pican?')" class="text-[11px] font-semibold bg-white hover:bg-orange-50 text-gray-700 border border-gray-200 hover:border-orange-300 px-2.5 py-1 rounded-full shadow-2xs transition">🍗 Salsas disponibles</button>
+                <button type="button" onclick="sendQuickPrompt('¿Qué me recomiendas para 2 personas?')" class="text-[11px] font-semibold bg-white hover:bg-orange-50 text-gray-700 border border-gray-200 hover:border-orange-300 px-2.5 py-1 rounded-full shadow-2xs transition">👥 Para 2 personas</button>
+                <button type="button" onclick="sendQuickPrompt('¿Cuáles son las promociones de hoy?')" class="text-[11px] font-semibold bg-white hover:bg-orange-50 text-gray-700 border border-gray-200 hover:border-orange-300 px-2.5 py-1 rounded-full shadow-2xs transition">🔥 Promos del día</button>
+                <button type="button" onclick="sendQuickPrompt('¿Hasta qué hora atienden y cómo pago?')" class="text-[11px] font-semibold bg-white hover:bg-orange-50 text-gray-700 border border-gray-200 hover:border-orange-300 px-2.5 py-1 rounded-full shadow-2xs transition">🕒 Horario y pago</button>
+            </div>
+        </div>
+
+        <!-- Indicador de 'Escribiendo...' -->
+        <div id="ai-typing-indicator" class="hidden px-4 py-2 bg-gray-50/80 text-xs text-gray-500 items-center gap-2 border-t border-gray-100">
+            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-bounce"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-bounce [animation-delay:0.2s]"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-bounce [animation-delay:0.4s]"></span>
+            <span class="italic text-[11px] text-gray-400">Fielcito está respondiendo...</span>
+        </div>
+
+        <!-- Input Footer -->
+        <div class="p-2.5 sm:p-3 bg-white border-t border-gray-200 shrink-0">
+            <form id="ai-chat-form" onsubmit="handleAISubmit(event)" class="flex items-center gap-2">
+                <input type="text" id="ai-user-input" placeholder="Pregúntale a Fielcito..." autocomplete="off" class="flex-1 bg-gray-100 hover:bg-gray-50 focus:bg-white border border-gray-300 focus:border-orange-500 rounded-full px-3.5 py-2 text-xs text-gray-800 outline-none transition">
+                <button type="submit" id="ai-send-btn" class="bg-orange-600 hover:bg-orange-500 text-white p-2 rounded-full shadow-md transition disabled:opacity-50">
+                    <i data-lucide="send" size="16"></i>
+                </button>
+            </form>
+            <div class="flex justify-between items-center px-2 mt-1 text-[9px] sm:text-[10px] text-gray-400">
+                <span>Alitas Fieles • IA Asistente</span>
+                <button type="button" onclick="clearAIChat()" class="hover:underline cursor-pointer text-gray-400">Borrar chat</button>
+            </div>
+        </div>
+    </div>
+
     <button id="floating-btn" onclick="openMenu()" class="fixed bottom-6 right-6 bg-orange-600 text-white p-4 rounded-full shadow-2xl z-40 md:hidden animate-bounce border-4 border-white transition-opacity duration-500 opacity-0 pointer-events-none">
         <i data-lucide="utensils-crossed" size="24"></i>
     </button>
@@ -854,6 +935,232 @@
 
             window.open(`https://wa.me/51900694550?text=${encodeURIComponent(msg)}`, '_blank');
         }
+
+        // ==========================================
+        // ASISTENTE VIRTUAL IA: FIELCITO
+        // ==========================================
+        // Configura aquí la URL pública de tu Cloudflare Worker desplegado:
+        // (Si se deja vacío "", funcionará en Modo Inteligente Offline de respaldo)
+        const AI_WORKER_URL = ""; 
+
+        let aiChatHistory = [
+            {
+                role: "model",
+                content: "¡Hola causita! 👋 Soy Fielcito, tu asesor gastronómico con Inteligencia Artificial. ¿Qué se te antoja pedir hoy?"
+            }
+        ];
+        let isAILoading = false;
+
+        function toggleAIChat() {
+            const modal = document.getElementById('ai-chat-modal');
+            if (modal.classList.contains('hidden-modal')) {
+                modal.classList.remove('hidden-modal');
+                setTimeout(() => {
+                    document.getElementById('ai-user-input')?.focus();
+                }, 150);
+            } else {
+                modal.classList.add('hidden-modal');
+            }
+        }
+
+        function sendQuickPrompt(promptText) {
+            const input = document.getElementById('ai-user-input');
+            if (input) {
+                input.value = promptText;
+                handleAISubmit(new Event('submit'));
+            }
+        }
+
+        function clearAIChat() {
+            aiChatHistory = [
+                {
+                    role: "model",
+                    content: "¡Hola de nuevo causita! 👋 ¿En qué te ayudo a elegir hoy?"
+                }
+            ];
+            const container = document.getElementById('ai-messages-container');
+            container.innerHTML = `
+                <div class="flex items-start gap-2 max-w-[90%]">
+                    <div class="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold shadow-sm">🍗</div>
+                    <div class="ai-bubble-bot p-3 rounded-2xl shadow-sm text-gray-800 leading-relaxed text-xs">
+                        <p class="font-bold text-orange-600 mb-1">¡Chat reiniciado! 👋</p>
+                        <p>Soy <strong>Fielcito</strong>. Dime cuántas personas son o qué sabores te gustan y te armo la combinación perfecta.</p>
+                    </div>
+                </div>
+                <div id="ai-quick-chips" class="pt-1 pb-1 flex flex-wrap gap-1.5">
+                    <button type="button" onclick="sendQuickPrompt('¿Qué salsas tienen y cuáles no pican?')" class="text-[11px] font-semibold bg-white hover:bg-orange-50 text-gray-700 border border-gray-200 hover:border-orange-300 px-2.5 py-1 rounded-full shadow-2xs transition">🍗 Salsas disponibles</button>
+                    <button type="button" onclick="sendQuickPrompt('¿Qué me recomiendas para 2 personas?')" class="text-[11px] font-semibold bg-white hover:bg-orange-50 text-gray-700 border border-gray-200 hover:border-orange-300 px-2.5 py-1 rounded-full shadow-2xs transition">👥 Para 2 personas</button>
+                    <button type="button" onclick="sendQuickPrompt('¿Cuáles son las promociones de hoy?')" class="text-[11px] font-semibold bg-white hover:bg-orange-50 text-gray-700 border border-gray-200 hover:border-orange-300 px-2.5 py-1 rounded-full shadow-2xs transition">🔥 Promos del día</button>
+                    <button type="button" onclick="sendQuickPrompt('¿Hasta qué hora atienden y cómo pago?')" class="text-[11px] font-semibold bg-white hover:bg-orange-50 text-gray-700 border border-gray-200 hover:border-orange-300 px-2.5 py-1 rounded-full shadow-2xs transition">🕒 Horario y pago</button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function parseAIResponseFormatting(text) {
+            if (!text) return "";
+            
+            // 1. Convertir etiquetas [PRODUCTO:ID] en tarjetas interactivas de compra
+            const productTagRegex = /\[PRODUCTO:\s*(\d+)\]/gi;
+            let formatted = text.replace(productTagRegex, (match, id) => {
+                const productId = parseInt(id, 10);
+                const item = MENU.find(m => m.id === productId);
+                if (!item) return "";
+                return `
+                    <div class="my-2 p-2.5 bg-orange-50 border border-orange-200 rounded-xl flex items-center justify-between gap-2 shadow-2xs">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <img src="${item.image}" alt="${item.name}" class="w-11 h-11 rounded-lg object-cover bg-gray-200 shrink-0 border border-orange-200/80">
+                            <div class="min-w-0">
+                                <p class="font-bold text-gray-900 text-xs truncate">${item.name}</p>
+                                <p class="font-black text-orange-600 text-xs">S/ ${item.price.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="aiOrderProduct(${item.id})" class="bg-orange-600 hover:bg-orange-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full shrink-0 shadow-sm transition active:scale-95 flex items-center gap-1">
+                            <i data-lucide="plus" size="12"></i> Pedir
+                        </button>
+                    </div>
+                `;
+            });
+
+            // 2. Formato Markdown básico
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            formatted = formatted.replace(/\n\n/g, '<p class="mt-1.5"></p>');
+            formatted = formatted.replace(/\n/g, '<br>');
+            return formatted;
+        }
+
+        function aiOrderProduct(id) {
+            const modal = document.getElementById('ai-chat-modal');
+            if (modal) modal.classList.add('hidden-modal');
+            openMenu();
+            handleAddButton(id);
+        }
+
+        async function handleAISubmit(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            if (isAILoading) return;
+
+            const input = document.getElementById('ai-user-input');
+            const userText = input.value.trim();
+            if (!userText) return;
+
+            input.value = "";
+            const container = document.getElementById('ai-messages-container');
+            const chips = document.getElementById('ai-quick-chips');
+            if (chips) chips.remove();
+
+            // Mensaje del usuario
+            const userBubble = document.createElement('div');
+            userBubble.className = "flex items-start justify-end gap-2";
+            userBubble.innerHTML = `
+                <div class="ai-bubble-user p-3 rounded-2xl shadow-sm text-xs max-w-[85%] leading-relaxed">
+                    ${userText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+                </div>
+            `;
+            container.appendChild(userBubble);
+            container.scrollTop = container.scrollHeight;
+
+            aiChatHistory.push({ role: "user", content: userText });
+
+            isAILoading = true;
+            const indicator = document.getElementById('ai-typing-indicator');
+            const sendBtn = document.getElementById('ai-send-btn');
+            indicator.classList.remove('hidden');
+            indicator.classList.add('flex');
+            sendBtn.disabled = true;
+
+            let botReplyText = "";
+
+            try {
+                if (AI_WORKER_URL && AI_WORKER_URL.trim() !== "") {
+                    const res = await fetch(AI_WORKER_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            messages: aiChatHistory
+                        })
+                    });
+
+                    if (!res.ok) {
+                        throw new Error("HTTP error " + res.status);
+                    }
+
+                    const data = await res.json();
+                    botReplyText = data.reply || "Disculpa causita, tuve un pequeño cruce. ¿Me repites tu consulta?";
+                } else {
+                    await new Promise(r => setTimeout(r, 500));
+                    botReplyText = getAIFallbackResponse(userText);
+                }
+            } catch (err) {
+                console.warn("Fielcito IA Worker no disponible, usando modo respaldo:", err);
+                botReplyText = getAIFallbackResponse(userText);
+            } finally {
+                isAILoading = false;
+                indicator.classList.add('hidden');
+                indicator.classList.remove('flex');
+                sendBtn.disabled = false;
+            }
+
+            aiChatHistory.push({ role: "model", content: botReplyText });
+
+            const botBubble = document.createElement('div');
+            botBubble.className = "flex items-start gap-2 max-w-[92%]";
+            botBubble.innerHTML = `
+                <div class="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold shadow-sm">🍗</div>
+                <div class="ai-bubble-bot p-3 rounded-2xl shadow-sm leading-relaxed text-xs">
+                    ${parseAIResponseFormatting(botReplyText)}
+                </div>
+            `;
+            container.appendChild(botBubble);
+            lucide.createIcons();
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function getAIFallbackResponse(query) {
+            const q = query.toLowerCase();
+
+            if (q.includes("salsa") || q.includes("sabor") || q.includes("pican") || q.includes("pica")) {
+                return "¡Nuestras alitas son leales al sabor! 🔥 Tenemos 7 salsas:\n- **BBQ** (Dulce y ahumada, no pica)\n- **Acevichadas** (Cremosa con toque alimonado, la favorita)\n- **Búfalo Picante** (¡Para los valientes que aman el picor!)\n- **Anticucheras** (Parrilleras con sazón criolla)\n- **Doradas** (Crujientes clásicas al punto de sal)\n- **Broasters** (Extra crocantes rebozadas)\n- **Maracuyá** (Agridulce tropical deliciosa)\n\n¿Deseas personalizar tu porción de 8 alitas? [PRODUCTO:1]";
+            }
+
+            if (q.includes("2 persona") || q.includes("dos persona") || q.includes("pareja") || q.includes("2 amigos")) {
+                return "¡Para 2 personas la combinación ideal es el **Súper Fiel**! 🔥 Trae 12 alitas donde pueden combinar hasta 3 sabores a elección [PRODUCTO:102].\n\nO si prefieren hamburguesas, la **Promo Duo Hamburguesas** [PRODUCTO:112] viene con 2 hamburguesas clásicas + 2 Pepsi por solo S/ 24.90.";
+            }
+
+            if (q.includes("1 persona") || q.includes("solo") || q.includes("soltero") || q.includes("para mi")) {
+                return "¡Para ti solo te recomiendo el combo **Soltero.com** [PRODUCTO:101] (5 alitas + gaseosa de 1/2 L por S/ 20) o nuestra **Promo Bienvenida** [PRODUCTO:114] por S/ 17.90.";
+            }
+
+            if (q.includes("3 persona") || q.includes("4 persona") || q.includes("familia") || q.includes("amigos") || q.includes("grupo")) {
+                return "¡Para grupos y bajones bravos tenemos los reyes de la casa! 👑\n- **Combo Traición (20 Alitas + Pepsi 750ml)** [PRODUCTO:103] a S/ 50.00.\n- **Combo 2 Pa 2 (40 Alitas + Pepsi 1.5L)** [PRODUCTO:104] a S/ 90.00.\n¡Pueden elegir hasta 4 sabores diferentes!";
+            }
+
+            if (q.includes("promo") || q.includes("oferta") || q.includes("descuento") || q.includes("hoy")) {
+                const day = new Date().getDay();
+                let dayName = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"][day];
+                let dayExtra = "";
+                if (day === 2) dayExtra = "¡Hoy es **Martes de Fieles** [PRODUCTO:110] (5 alitas a solo S/ 15.90)!";
+                else if (day === 4) dayExtra = "¡Hoy es **Jueves de Infiel** [PRODUCTO:111] (15 alitas a S/ 34.90)!";
+                else dayExtra = "De Lunes a Viernes tenemos los Combos Duo de Hamburguesas [PRODUCTO:112] y Salchipapas [PRODUCTO:113] a S/ 24.90.";
+                
+                return `¡Hoy es ${dayName} de sabor! 🔥 ${dayExtra}\nAdemás siempre tienes disponible el combo **Súper Fiel** [PRODUCTO:102].`;
+            }
+
+            if (q.includes("hamburguesa") || q.includes("burger")) {
+                return "¡Nuestras hamburguesas salen con generosas papas fritas! 🍔 Te recomiendo **La Simona** con queso cheddar [PRODUCTO:22] o la legendaria **La Tramposa** (queso, huevo y tocino) [PRODUCTO:24].";
+            }
+
+            if (q.includes("salchipapa")) {
+                return "¡Las salchipapas aquí son cosa seria! 🍟 La consentida de los clientes es **La Incondicional** [PRODUCTO:32] (salchicha frankfurter, chorizo, trozos de pollo y finas hierbas) a S/ 18.90.";
+            }
+
+            if (q.includes("horario") || q.includes("hora") || q.includes("atienden") || q.includes("abierto") || q.includes("pago") || q.includes("yape") || q.includes("plin") || q.includes("direccion") || q.includes("donde")) {
+                return "📍 **Ubicación:** Av. Marco Polo 1488, San Martín de Porres (Lima Norte).\n⏰ **Horario:** Atendemos de Lunes a Domingo de 5:30 PM a 12:00 AM (todos los días).\n💳 **Pagos:** Aceptamos Yape, Plin y Efectivo.\n🛵 **Delivery:** Envías tu pedido directo por WhatsApp y nos compartes tu ubicación GPS en tiempo real.";
+            }
+
+            return "¡Aquí en Alitas Fieles nunca te fallamos! 🍗 Te sugiero probar el **Súper Fiel** de 12 alitas [PRODUCTO:102] o consultar por nuestras salchipapas y hamburguesas. ¿Qué tipo de antojo tienes hoy?";
+        }
+
     </script>
 </body>
 </html>
