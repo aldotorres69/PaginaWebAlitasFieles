@@ -1,6 +1,6 @@
 /**
  * Cloudflare Worker: Backend de Alta Velocidad para "Fielcito IA"
- * Modelo: Google Gemini 2.5 Flash con Thinking Budget = 0 (Latencia ultra baja)
+ * Versión: 2.1.0 (Latencia Ultra Baja < 1.5s, Sanitización de Roles, Timeout y Fallback)
  */
 
 export default {
@@ -15,9 +15,40 @@ export default {
       return new Response(null, { headers: corsHeaders });
     }
 
+    const url = new URL(request.url);
+
+    // Endpoint de diagnóstico rápido de velocidad y estado
+    if (request.method === "GET" && url.pathname === "/debug") {
+      const apiKey = env.GEMINI_API_KEY;
+      if (!apiKey) return new Response(JSON.stringify({ error: "Falta GEMINI_API_KEY" }), { headers: corsHeaders });
+      
+      const t0 = Date.now();
+      try {
+        const testRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ role: "user", parts: [{ text: "Responde: OK" }] }],
+            generationConfig: { maxOutputTokens: 10 }
+          }),
+          signal: AbortSignal.timeout(5000)
+        });
+        const elapsed = Date.now() - t0;
+        const data = await testRes.json();
+        return new Response(JSON.stringify({ status: testRes.status, elapsed_ms: elapsed, data }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: err.message, elapsed_ms: Date.now() - t0 }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+    }
+
     if (request.method === "GET") {
       return new Response(
-        JSON.stringify({ status: "ok", service: "Fielcito IA Ultra-Fast Backend", version: "2.0.0" }),
+        JSON.stringify({ status: "ok", service: "Fielcito IA Ultra-Fast Backend", version: "2.1.0" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -48,8 +79,31 @@ export default {
         );
       }
 
-      // Solo enviar los últimos 6 mensajes para máxima velocidad
-      const recentMessages = messages.slice(-6);
+      // Convertir mensajes al formato de Gemini
+      let geminiContents = messages.slice(-5).map(msg => ({
+        role: msg.role === "assistant" || msg.role === "model" ? "model" : "user",
+        parts: [{ text: msg.content }]
+      }));
+
+      // REGLA CRÍTICA DE GEMINI: El primer mensaje del array 'contents' DEBE ser siempre de rol 'user'
+      while (geminiContents.length > 0 && geminiContents[0].role !== "user") {
+        geminiContents.shift();
+      }
+
+      // Si quedó vacío, insertamos el mensaje del usuario por defecto
+      if (geminiContents.length === 0) {
+        geminiContents.push({ role: "user", parts: [{ text: "Hola" }] });
+      }
+
+      // Fusionar mensajes consecutivos del mismo rol para evitar errores de alternancia en Gemini
+      const sanitizedContents = [];
+      for (const item of geminiContents) {
+        if (sanitizedContents.length > 0 && sanitizedContents[sanitizedContents.length - 1].role === item.role) {
+          sanitizedContents[sanitizedContents.length - 1].parts[0].text += `\n${item.parts[0].text}`;
+        } else {
+          sanitizedContents.push(item);
+        }
+      }
 
       const SYSTEM_PROMPT = `
 Eres "Fielcito 🍗", el mesero virtual rápido y amigable de "Alitas Fieles" (Av. Marco Polo 1488, San Martín de Porres).
@@ -80,15 +134,11 @@ Carta resumida:
 IMPORTANTE: Siempre que recomiendes un producto pon al final de la mención su código exacto [PRODUCTO:ID]. Sé muy conciso.
 `;
 
-      const geminiContents = recentMessages.map(msg => ({
-        role: msg.role === "assistant" ? "model" : "user",
-        parts: [{ text: msg.content }]
-      }));
-
-      // Modelos ordenados por velocidad
+      // Modelos ordenados por velocidad y disponibilidad
       const candidateModels = [
-        "gemini-2.5-flash",
-        "gemini-flash-latest"
+        "gemini-flash-latest",
+        "gemini-2.5-flash-lite",
+        "gemini-2.5-flash"
       ];
 
       let lastError = null;
@@ -98,7 +148,7 @@ IMPORTANTE: Siempre que recomiendes un producto pon al final de la mención su c
         try {
           const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
           
-          // Enviamos con thinking_budget = 0 para respuesta ultra rápida (1-2 segs)
+          // Timeout estricto de 4.5 segundos por modelo para que nunca se cuelgue
           const res = await fetch(geminiUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -106,15 +156,16 @@ IMPORTANTE: Siempre que recomiendes un producto pon al final de la mención su c
               system_instruction: {
                 parts: [{ text: SYSTEM_PROMPT }]
               },
-              contents: geminiContents,
+              contents: sanitizedContents,
               generationConfig: {
-                thinking_config: {
-                  thinking_budget: 0
+                thinkingConfig: {
+                  thinkingBudget: 0
                 },
                 temperature: 0.6,
-                maxOutputTokens: 350
+                maxOutputTokens: 280
               }
-            })
+            }),
+            signal: AbortSignal.timeout(4500)
           });
 
           if (res.ok) {
@@ -122,32 +173,12 @@ IMPORTANTE: Siempre que recomiendes un producto pon al final de la mención su c
             reply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
             if (reply) break;
           } else {
-            // Si thinking_config falla en algún modelo específico, intentamos sin thinking_config
-            const retryRes = await fetch(geminiUrl, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                system_instruction: {
-                  parts: [{ text: SYSTEM_PROMPT }]
-                },
-                contents: geminiContents,
-                generationConfig: {
-                  temperature: 0.6,
-                  maxOutputTokens: 350
-                }
-              })
-            });
-
-            if (retryRes.ok) {
-              const geminiData = await retryRes.json();
-              reply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
-              if (reply) break;
-            } else {
-              lastError = await retryRes.text();
-            }
+            // Reintento rápido simplificado
+            const errBody = await res.text();
+            lastError = `Modelo ${model} (${res.status}): ${errBody}`;
           }
         } catch (e) {
-          lastError = e.message;
+          lastError = `Error con ${model}: ${e.message}`;
         }
       }
 

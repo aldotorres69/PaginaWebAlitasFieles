@@ -1069,14 +1069,18 @@
 
             try {
                 if (AI_WORKER_URL && AI_WORKER_URL.trim() !== "") {
-                    // Enviamos solo los últimos 6 mensajes para máxima rapidez
-                    const payloadMessages = aiChatHistory.slice(-6);
+                    // Enviamos solo los últimos turnos garantizando que el primer turno no sea model
+                    const payloadMessages = aiChatHistory
+                        .filter((m, idx) => !(idx === 0 && m.role === "model"))
+                        .slice(-6);
+
                     const res = await fetch(AI_WORKER_URL, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             messages: payloadMessages
-                        })
+                        }),
+                        signal: AbortSignal.timeout(6500)
                     });
 
                     if (!res.ok) {
